@@ -1030,6 +1030,14 @@ function manualNamedItem(name: string, unit = "需确认", price: number | null 
   };
 }
 
+function missingOfficialActionItem(action: ProcedureAction): BillingItem {
+  return manualNamedItem(action.targetItemName, "需确认", null);
+}
+
+function addMissingOfficialActionWarning(warnings: string[], itemName: string, actionName: string) {
+  warnings.push(`已识别“${actionName}”，但当前官方项目库未找到“${itemName}”，请补充官方项目库或人工确认收费目录。`);
+}
+
 function sourceLabel(sourceRule: LatestComboRule) {
   return sourceRule.source === "manualBillingRules20260519" ? "manualBillingRules院内解读" : "最新收费明细标准";
 }
@@ -1429,17 +1437,25 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
         parsedActions.push(`${systemName(segment.systemId)}：${segment.raw} → 已归入颅内动脉瘤栓塞费，不另列脑血管支架置入费`);
         continue;
       }
-      const item = findItem(effectiveItems, action.targetItemName);
+      const item = findItem(effectiveItems, action.targetItemName) || missingOfficialActionItem(action);
+      if (item.sourceFile === "manualBillingRules") {
+        addMissingOfficialActionWarning(globalWarnings, action.targetItemName, action.name);
+      }
       addRecommendation(recommendations, item, quantityForAction(action, segment.raw, text), action.reason, {
         systemId: segment.systemId,
         systemName: systemName(segment.systemId),
+        systemGroup: segment.systemId,
         actionName: action.name,
         clinicalTerm: segment.raw,
         actualAction: action.actualAction,
         addons: action.addons?.(segment.raw, text) || [],
         exclusions: action.exclusions?.(segment.raw, text) || [],
-        reviews: action.reviews?.(segment.raw, text) || [],
+        reviews: unique([
+          ...(action.reviews?.(segment.raw, text) || []),
+          ...(item.sourceFile === "manualBillingRules" ? [`“${action.targetItemName}”需人工确认或补充官方项目库。`] : []),
+        ]),
         recordAdvice: action.recordAdvice || [],
+        tags: item.sourceFile === "manualBillingRules" ? ["需人工确认"] : [],
       });
     }
   }

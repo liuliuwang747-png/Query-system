@@ -30,6 +30,24 @@ async function getJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+function normalizeStaticRules(payload: unknown): ApiRule[] {
+  const source = payload as Partial<Record<"countRules" | "addonRules" | "exclusionRules" | "extensionRules" | "mappingRules" | "manualReviewRules", unknown[]>>;
+  return Object.values(source)
+    .filter(Array.isArray)
+    .flatMap((rules) => rules as Record<string, unknown>[])
+    .map((rule, index) => ({
+      id: index + 1,
+      ruleType: String(rule.type || ""),
+      scope: String(rule.scope || "all"),
+      title: String(rule.title || ""),
+      triggerKeywords: Array.isArray(rule.triggerKeywords) ? rule.triggerKeywords.map(String) : [],
+      targetItemName: String(rule.targetItemNameIncludes || rule.itemNameIncludes || ""),
+      ruleText: String(rule.ruleText || rule.reason || ""),
+      riskLevel: "normal" as const,
+      active: true,
+    }));
+}
+
 export async function loadRuntimeData() {
   try {
     const [version, itemPayload, rulePayload] = await Promise.all([
@@ -47,6 +65,26 @@ export async function loadRuntimeData() {
       offline: false,
     };
   } catch {
+    try {
+      const [items, staticRules] = await Promise.all([
+        getJson<BillingItem[]>("/items.json"),
+        getJson<unknown>("/billingRules.json").catch(() => ({})),
+      ]);
+      const rules = normalizeStaticRules(staticRules);
+      const version: ApiVersion = {
+        version: 0,
+        note: "静态公开版本",
+        itemCount: items.length,
+        ruleCount: rules.length,
+        publishedAt: "static",
+      };
+      localStorage.setItem(itemCacheKey, JSON.stringify(items));
+      localStorage.setItem(ruleCacheKey, JSON.stringify(rules));
+      localStorage.setItem(versionCacheKey, JSON.stringify(version));
+      return { items, rules, version, offline: false };
+    } catch {
+      // 静态文件也不可用时，才使用浏览器缓存。
+    }
     const items = JSON.parse(localStorage.getItem(itemCacheKey) || "[]") as BillingItem[];
     const rules = JSON.parse(localStorage.getItem(ruleCacheKey) || "[]") as ApiRule[];
     const version = JSON.parse(localStorage.getItem(versionCacheKey) || "null") as ApiVersion | null;

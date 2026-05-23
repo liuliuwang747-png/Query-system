@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { runProcedureCombinationSkill as analyzeProcedure } from "../src/procedureCombinationSkill";
+import { loadRuntimeData } from "../src/api";
 import { calculateEstimatedAmount, inferQuantityMeta } from "../src/quantityConfirmationRules";
 import type { BillingItem } from "../src/types";
 import itemsJson from "../src/data/items.generated.json";
@@ -142,10 +143,27 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = names("冠脉溶栓+支架");
+  includesName(output, "冠状动脉造影费");
+  includesName(output, "冠状动脉支架置入费");
+  includesName(output, "冠状动脉溶栓费");
+}
+
+{
   const output = names("冠脉支架+溶栓");
   includesName(output, "冠状动脉造影费");
   includesName(output, "冠状动脉支架置入费");
   includesName(output, "冠状动脉溶栓费");
+}
+
+{
+  const output = analyzeProcedure("冠脉溶栓+支架", [], []);
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "冠状动脉造影费");
+  includesName(outputNames, "冠状动脉支架置入费");
+  includesName(outputNames, "冠状动脉溶栓费");
+  assert.ok(!outputNames.some((name) => name.includes("脑血管")), "官方心血管项目库缺失时不能回退误匹配脑血管项目");
+  assert.ok(output.globalWarnings.some((warning) => warning.includes("补充官方项目库")), "官方项目缺失时应提示补充收费目录");
 }
 
 {
@@ -469,6 +487,57 @@ function includesName(list: string[], expected: string) {
   assert.equal(inferQuantityMeta(routine).needsQuantityConfirmation, false, "常规心律失常消融为普通按次收费，不应提示数量确认");
   assert.equal(inferQuantityMeta(complex).needsQuantityConfirmation, false, "复杂心律失常消融为普通按次收费，不应提示数量确认");
   assert.equal(inferQuantityMeta(hcm).needsQuantityConfirmation, false, "肥厚型心肌病消融为普通按次收费，不应提示数量确认");
+}
+
+{
+  const staticItem: BillingItem = {
+    systemCategory: "心血管",
+    sourceFile: "static",
+    newCode: "test-code",
+    newName: "冠状动脉支架置入费",
+    itemType: "main",
+    description: "",
+    unit: "血管",
+    billingNote: "",
+    price: 4980,
+    oldCodes: [],
+    oldNames: [],
+    parentItem: "冠状动脉支架置入费",
+    keywords: ["冠状动脉支架置入费"],
+    isInterventional: true,
+    isCommonCathLabItem: true,
+  };
+  const calls: string[] = [];
+  const store = new Map<string, string>();
+  const originalFetch = globalThis.fetch;
+  const originalLocalStorage = globalThis.localStorage;
+
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => store.set(key, value),
+      removeItem: (key: string) => store.delete(key),
+      clear: () => store.clear(),
+    },
+  });
+  globalThis.fetch = (async (url: string | URL | Request) => {
+    const path = String(url);
+    calls.push(path);
+    if (path.startsWith("/api/")) return { ok: false, status: 404, json: async () => ({}) } as Response;
+    if (path === "/items.json") return { ok: true, json: async () => [staticItem] } as Response;
+    if (path === "/billingRules.json") {
+      return { ok: true, json: async () => ({ countRules: [], addonRules: [], exclusionRules: [], extensionRules: [], mappingRules: [], manualReviewRules: [] }) } as Response;
+    }
+    throw new Error(`unexpected fetch ${path}`);
+  }) as typeof fetch;
+
+  const data = await loadRuntimeData();
+  assert.equal(data.items[0].newName, "冠状动脉支架置入费", "静态 Netlify 环境应回退读取 /items.json");
+  assert.ok(calls.includes("/items.json"), "API 不存在时必须读取静态 items.json");
+
+  globalThis.fetch = originalFetch;
+  Object.defineProperty(globalThis, "localStorage", { configurable: true, value: originalLocalStorage });
 }
 
 console.log("procedureParser.test.ts passed");
