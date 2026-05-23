@@ -1,0 +1,991 @@
+{
+  "metadata": {
+    "name": "导管室最新收费明细标准",
+    "version": "2026-05-22",
+    "sourceFiles": [
+      "心脏介入收费20260522.pdf",
+      "新外周神经介入收费.xlsx"
+    ],
+    "priorityRule": "无特殊要求时，默认按照本标准生成收费组合；项目名称、计价单位、价格优先与官方Excel项目库匹配；组合逻辑与特殊口径按本标准执行。",
+    "globalNote": "括号内费用与实际操作相对应，并应与医生手术记录相符；若无相关检查或操作，则不收费。"
+  },
+  "displayRules": {
+    "comboLayout": "vertical",
+    "showCodeInMainCombo": false,
+    "showPriceAndUnit": true,
+    "noHorizontalScroll": true,
+    "manualConfirmBelowMainCombo": true
+  },
+  "heartInterventionCombos": [
+    {
+      "group": "CAG",
+      "name": "冠脉造影术",
+      "triggers": [
+        "冠脉造影",
+        "CAG",
+        "冠状动脉造影"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "搭桥术后桥血管造影+冠脉造影",
+      "triggers": [
+        "桥血管造影",
+        "搭桥术后造影",
+        "CABG术后造影"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉造影费-桥血管造影加收",
+          "price": 780
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "冠脉造影术+左室造影术",
+      "triggers": [
+        "冠脉造影+左室造影",
+        "左室造影",
+        "左心室造影"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉造影费-左心室造影加收",
+          "price": 2110
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "冠脉造影术+血栓抽吸术",
+      "triggers": [
+        "冠脉造影+血栓抽吸",
+        "冠脉抽吸",
+        "冠脉取栓",
+        "冠脉吸栓"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉腔内减容费",
+          "price": 5580
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "冠脉造影术+冠脉溶栓术",
+      "triggers": [
+        "冠脉溶栓",
+        "尿激酶",
+        "冠状动脉溶栓"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉溶栓费",
+          "price": 2680
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "冠脉造影术+IVUS/OCT/FFR检查",
+      "triggers": [
+        "冠脉造影+IVUS",
+        "冠脉造影+OCT",
+        "冠脉造影+FFR",
+        "IVUS",
+        "OCT",
+        "FFR"
+      ],
+      "comboLogic": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "if": "IVUS or OCT",
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        },
+        {
+          "if": "FFR",
+          "itemName": "冠状动脉血流储备功能检查费",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "group": "CAG",
+      "name": "住院内二次冠脉造影术+IVUS/OCT/FFR检查",
+      "triggers": [
+        "住院内二次冠脉造影",
+        "二次冠脉造影",
+        "再次冠脉造影"
+      ],
+      "manualReview": "需要医生说明造影目的，上报物价部研判。"
+    },
+    {
+      "group": "PTCA",
+      "name": "一支球囊扩张",
+      "triggers": [
+        "一支球囊扩张",
+        "冠脉球囊",
+        "PTCA"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉球囊扩张费",
+          "price": 4076,
+          "quantity": 1
+        }
+      ],
+      "questions": [
+        "确认治疗血管数量；两支球囊扩张按4076×2。"
+      ]
+    },
+    {
+      "group": "PTCA",
+      "name": "一支球囊扩张+IVUS/OCT/FFR+血栓抽吸/ROTA/IVL",
+      "triggers": [
+        "球囊+IVUS",
+        "球囊+OCT",
+        "球囊+FFR",
+        "球囊+旋磨",
+        "球囊+IVL",
+        "球囊+抽吸"
+      ],
+      "comboLogic": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉球囊扩张费",
+          "price": 4076
+        },
+        {
+          "if": "IVUS or OCT",
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        },
+        {
+          "if": "FFR",
+          "itemName": "冠状动脉血流储备功能检查费",
+          "price": 1000
+        },
+        {
+          "if": "血栓抽吸 or ROTA or IVL",
+          "itemName": "冠状动脉腔内减容费",
+          "price": 5580
+        }
+      ]
+    },
+    {
+      "group": "PTCA",
+      "name": "一支球囊扩张+IABP+IVUS",
+      "triggers": [
+        "球囊+IABP+IVUS"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉球囊扩张费",
+          "price": 4076
+        },
+        {
+          "itemName": "主动脉内球囊反搏安装费",
+          "price": 3000
+        },
+        {
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "主动脉内球囊反搏取出费",
+          "price": 566,
+          "condition": "实际取出"
+        }
+      ]
+    },
+    {
+      "group": "PTCA",
+      "name": "两支球囊扩张",
+      "triggers": [
+        "两支球囊",
+        "两根血管球囊"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉球囊扩张费",
+          "price": 4076,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "支架置入术+血栓抽吸/ROTA/IVL",
+      "triggers": [
+        "支架+血栓抽吸",
+        "支架+ROTA",
+        "支架+IVL",
+        "支架+旋磨",
+        "支架+取栓"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "冠状动脉腔内减容费",
+          "price": 5580
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "支架置入术+IVUS/OCT/FFR",
+      "triggers": [
+        "支架+IVUS",
+        "支架+OCT",
+        "支架+FFR"
+      ],
+      "comboLogic": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "if": "IVUS or OCT",
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        },
+        {
+          "if": "FFR",
+          "itemName": "冠状动脉血流储备功能检查费",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "CTO逆向开通+支架置入术+IVUS",
+      "triggers": [
+        "CTO逆向开通+支架+IVUS",
+        "CTO+支架+IVUS"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "冠状动脉慢性完全闭塞血管逆向再通费",
+          "price": 3000
+        },
+        {
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "支架置入术+IABP",
+      "triggers": [
+        "支架+IABP",
+        "支架+球囊反搏"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "主动脉内球囊反搏安装费",
+          "price": 3000
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "主动脉内球囊反搏取出费",
+          "price": 566,
+          "condition": "实际取出"
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "支架置入术+TPM",
+      "triggers": [
+        "支架+TPM",
+        "支架+临时起搏器",
+        "支架+临起"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "临时起搏器安装费",
+          "price": 1690
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "临时起搏器取出费",
+          "price": 200,
+          "condition": "手术结束当场拔出/实际取出"
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "支架置入术+另一支球囊扩张",
+      "triggers": [
+        "支架+另一支球囊",
+        "支架+其他血管球囊"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "冠状动脉球囊扩张费",
+          "price": 4076
+        }
+      ],
+      "questions": [
+        "确认支架和球囊是否为不同治疗血管；同一血管普通预扩/后扩不另收球囊扩张费。"
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "两支支架置入术",
+      "triggers": [
+        "两支支架",
+        "两根血管支架"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "group": "PCI",
+      "name": "住院内二次支架置入术+IVUS",
+      "triggers": [
+        "住院内二次支架+IVUS",
+        "二次支架+IVUS"
+      ],
+      "combo": [
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "冠状动脉腔内影像学检查费",
+          "price": 4350
+        }
+      ],
+      "note": "只收治疗费。"
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "右心导管检查术",
+      "triggers": [
+        "右心导管",
+        "RHC"
+      ],
+      "combo": [
+        {
+          "itemName": "右心导管检查费",
+          "price": 2328
+        }
+      ]
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "结构性心脏病封堵费+右心导管检查术+动静脉造影",
+      "triggers": [
+        "结构性封堵+右心导管",
+        "房缺封堵+右心导管",
+        "PFO封堵+右心导管"
+      ],
+      "combo": [
+        {
+          "itemName": "右心导管检查费",
+          "price": 2328
+        },
+        {
+          "itemName": "结构性心脏病封堵费（常规）",
+          "price": 4100
+        },
+        {
+          "itemName": "动静脉造影",
+          "priceOptions": [
+            2720,
+            3270
+          ],
+          "condition": "按实际造影项目"
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "6周岁以下儿童加收",
+          "price": 820,
+          "condition": "6周岁以下儿童"
+        }
+      ]
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "结构性心脏病复杂封堵",
+      "triggers": [
+        "肺动静脉瘘",
+        "冠状动脉瘘",
+        "主动脉窦瘤",
+        "瓣周漏",
+        "吻合口漏",
+        "复杂封堵"
+      ],
+      "combo": [
+        {
+          "itemName": "结构性心脏病封堵费（复杂）",
+          "price": 4500
+        }
+      ]
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "TAVR+PCI+TPM",
+      "triggers": [
+        "TAVR+PCI+TPM",
+        "TAVR+支架+临起"
+      ],
+      "combo": [
+        {
+          "itemName": "相关造影/导管检查项目",
+          "price": 3270
+        },
+        {
+          "itemName": "经导管主动脉瓣置换相关项目",
+          "price": 9800
+        },
+        {
+          "itemName": "冠状动脉造影费",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "price": 4980
+        },
+        {
+          "itemName": "临时起搏器安装费",
+          "price": 1690
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "临时起搏器取出费",
+          "price": 200,
+          "condition": "实际取出"
+        }
+      ]
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "TAVR+TPM+(IABP)",
+      "triggers": [
+        "TAVR+TPM",
+        "TAVR+临起",
+        "TAVR+IABP"
+      ],
+      "combo": [
+        {
+          "itemName": "相关造影/导管检查项目",
+          "price": 3270
+        },
+        {
+          "itemName": "经导管主动脉瓣置换相关项目",
+          "price": 9800
+        },
+        {
+          "itemName": "临时起搏器安装费",
+          "price": 1690
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "临时起搏器取出费",
+          "price": 200,
+          "condition": "实际取出"
+        },
+        {
+          "itemName": "主动脉内球囊反搏安装费",
+          "price": 3000,
+          "condition": "实际使用IABP"
+        }
+      ]
+    },
+    {
+      "group": "先心/结构性心脏病",
+      "name": "TEER",
+      "triggers": [
+        "TEER",
+        "二尖瓣缘对缘修复"
+      ],
+      "combo": [
+        {
+          "itemName": "右心导管检查费",
+          "price": 2328
+        },
+        {
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        },
+        {
+          "itemName": "TEER相关手术费",
+          "price": 4540
+        }
+      ]
+    },
+    {
+      "group": "高血压",
+      "name": "肾上腺静脉采血",
+      "triggers": [
+        "肾上腺静脉采血",
+        "AVS"
+      ],
+      "combo": [
+        {
+          "itemName": "肾上腺静脉采血相关项目",
+          "price": 2904
+        },
+        {
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        }
+      ]
+    },
+    {
+      "group": "高血压",
+      "name": "肾动脉去神经费",
+      "triggers": [
+        "肾动脉去神经",
+        "RDN"
+      ],
+      "combo": [
+        {
+          "itemName": "肾动脉去神经费",
+          "price": 3500
+        },
+        {
+          "itemName": "相关造影项目",
+          "price": 3270
+        }
+      ]
+    },
+    {
+      "group": "射频消融",
+      "name": "复杂心律失常消融",
+      "triggers": [
+        "房颤",
+        "心房颤动",
+        "II型房扑",
+        "器质性室速",
+        "房颤射频",
+        "房颤消融"
+      ],
+      "combo": [
+        {
+          "itemName": "有创心内电生理检查费",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（复杂）",
+          "price": 7500
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "price": 900
+        },
+        {
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        }
+      ]
+    },
+    {
+      "group": "射频消融",
+      "name": "常规心律失常消融",
+      "triggers": [
+        "室上速",
+        "预激",
+        "I型房扑",
+        "房早",
+        "室早",
+        "房速",
+        "非器质性室速"
+      ],
+      "combo": [
+        {
+          "itemName": "有创心内电生理检查费",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（常规）",
+          "price": 5772
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "price": 900
+        }
+      ],
+      "conditionalItems": [
+        {
+          "itemName": "房间隔分流术",
+          "price": 3500,
+          "condition": "实际进行了房间隔穿刺/分流相关操作"
+        }
+      ]
+    },
+    {
+      "group": "射频消融",
+      "name": "一站式：电生理检查+射频消融+静脉造影+左心耳封堵",
+      "triggers": [
+        "一站式",
+        "房颤消融+左心耳",
+        "LAAO+房颤消融"
+      ],
+      "combo": [
+        {
+          "itemName": "有创心内电生理检查费",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（复杂）",
+          "price": 7500
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "price": 900
+        },
+        {
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        },
+        {
+          "itemName": "结构性心脏病封堵费（常规）",
+          "price": 4100
+        }
+      ]
+    },
+    {
+      "group": "射频消融",
+      "name": "单纯左心耳封堵",
+      "triggers": [
+        "单纯左心耳封堵",
+        "左心耳封堵",
+        "LAAO"
+      ],
+      "combo": [
+        {
+          "itemName": "结构性心脏病封堵费（常规）",
+          "price": 4100
+        },
+        {
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        }
+      ]
+    },
+    {
+      "group": "起搏器",
+      "name": "起搏器植入术",
+      "triggers": [
+        "起搏器植入",
+        "永久起搏器",
+        "单腔起搏器",
+        "双腔起搏器",
+        "三腔起搏器"
+      ],
+      "comboLogic": [
+        {
+          "itemName": "永久起搏器安装费",
+          "price": 3220
+        },
+        {
+          "if": "静脉造影",
+          "itemName": "选择性静脉造影术",
+          "price": 2720
+        },
+        {
+          "if": "电生理检查 or His起搏",
+          "itemName": "有创心内电生理检查费",
+          "price": 1690
+        },
+        {
+          "if": "TPM/临时起搏器",
+          "itemName": "临时起搏器安装费",
+          "price": 1690
+        },
+        {
+          "if": "临时起搏器实际取出",
+          "itemName": "临时起搏器取出费",
+          "price": 200
+        },
+        {
+          "if": "三腔起搏器",
+          "itemName": "三腔起搏器/除颤器安装加收",
+          "price": 1110
+        }
+      ]
+    },
+    {
+      "group": "起搏器",
+      "name": "ICD",
+      "triggers": [
+        "ICD",
+        "植入式除颤器"
+      ],
+      "combo": [
+        {
+          "itemName": "永久起搏器安装费/ICD相关安装费",
+          "price": 3220
+        }
+      ]
+    },
+    {
+      "group": "起搏器",
+      "name": "起搏器升级",
+      "triggers": [
+        "起搏器升级"
+      ],
+      "manualReview": "根据升级后起搏器的类型收取费用。"
+    },
+    {
+      "group": "起搏器",
+      "name": "电极调整术",
+      "triggers": [
+        "电极调整",
+        "起搏电极调整"
+      ],
+      "combo": [
+        {
+          "itemName": "电极调整术",
+          "price": 1400
+        }
+      ]
+    },
+    {
+      "group": "起搏器",
+      "name": "囊袋清创（加收）",
+      "triggers": [
+        "囊袋清创"
+      ],
+      "combo": [
+        {
+          "itemName": "囊袋清创（加收）",
+          "price": 150
+        }
+      ]
+    }
+  ],
+  "peripheralNeuroItems": [
+    {
+      "code": "012401000140000",
+      "itemName": "脑血管造影费",
+      "unit": "次",
+      "price": 2730,
+      "billingNote": "3根及以下血管按1次，超过3根每增加1根按33%加收，一次收费不得超过7280元。"
+    },
+    {
+      "code": "012401000150000",
+      "itemName": "脊髓血管造影费",
+      "unit": "次",
+      "price": 3990,
+      "billingNote": "4根及以下血管按1次，超过4根每增加1根按25%加收，一次收费不得超过11970元。"
+    },
+    {
+      "code": "013302000030000",
+      "itemName": "脑血管球囊扩张费（介入）",
+      "unit": "血管",
+      "price": 4890,
+      "billingNote": "同一血管颅内和颅外多处狭窄按2根血管计价；颅内部分适用颅内血管加收；脑静脉窦扩张适用颅内血管加收。"
+    },
+    {
+      "code": "013302000030011",
+      "itemName": "脑血管球囊扩张费（介入）-颅内血管（加收）",
+      "unit": "血管",
+      "price": 1467
+    },
+    {
+      "code": "013302000040000",
+      "itemName": "脑血管支架置入费（介入）",
+      "unit": "血管",
+      "price": 4890,
+      "billingNote": "同一血管颅内和颅外多处狭窄按2根血管计价；同一病变部位不与球囊扩张同时收取；脑静脉窦支架置入适用颅内血管加收。"
+    },
+    {
+      "code": "013302000040011",
+      "itemName": "脑血管支架置入费（介入）-颅内血管（加收）",
+      "unit": "血管",
+      "price": 1467
+    },
+    {
+      "code": "013302000050000",
+      "itemName": "慢性闭塞脑血管逆向再通费（介入）",
+      "unit": "血管",
+      "price": 5000
+    },
+    {
+      "code": "013302000050011",
+      "itemName": "慢性闭塞脑血管逆向再通费（介入）-颅内血管（加收）",
+      "unit": "血管",
+      "price": 1500
+    },
+    {
+      "code": "013302000060000",
+      "itemName": "脑血管腔内减容费（介入）",
+      "unit": "血管",
+      "price": 5500,
+      "aliases": [
+        "取栓",
+        "机械取栓",
+        "血栓抽吸",
+        "吸栓",
+        "抽栓",
+        "血栓清除",
+        "减容"
+      ]
+    },
+    {
+      "code": "013302000070000",
+      "itemName": "脑血管腔内溶栓费（介入）",
+      "unit": "次",
+      "price": 4510
+    },
+    {
+      "code": "013302000080000",
+      "itemName": "脑血管栓塞费（介入）",
+      "unit": "血管",
+      "price": 4600
+    },
+    {
+      "code": "013302000080011",
+      "itemName": "脑血管栓塞费（介入）-脑血管畸形栓塞（加收）",
+      "unit": "血管",
+      "price": 460
+    },
+    {
+      "code": "013302000090000",
+      "itemName": "颅内动脉瘤栓塞费（介入）",
+      "unit": "血管",
+      "price": 4890,
+      "billingNote": "脑血管造影（二次）+颅内动脉瘤栓塞术（包括单纯弹簧圈、弹簧圈+支架或密网支架、或单纯密网支架），收费均为脑血管造影费2730元+颅内动脉瘤栓塞费4890元；不另收脑血管支架置入费。",
+      "aliases": [
+        "颅内动脉瘤",
+        "脑动脉瘤",
+        "弹簧圈",
+        "弹簧圈栓塞",
+        "支架辅助弹簧圈",
+        "密网支架",
+        "单纯密网支架",
+        "血流导向支架",
+        "Pipeline支架",
+        "FD支架"
+      ]
+    },
+    {
+      "code": "013302000160000",
+      "itemName": "周围神经电极置入费",
+      "unit": "次",
+      "price": 2450,
+      "billingNote": "同台手术不得同时收取周围神经电极取出费。"
+    },
+    {
+      "code": "013302000161100",
+      "itemName": "周围神经电极置入费-骶神经刺激装置永久置入（扩展）",
+      "unit": "次",
+      "price": 2450
+    },
+    {
+      "code": "013302000560000",
+      "itemName": "颅神经松解费",
+      "unit": "次",
+      "price": 5670,
+      "billingNote": "经皮穿刺三叉神经微球囊压迫扩张术按此项目收取。"
+    }
+  ]
+}

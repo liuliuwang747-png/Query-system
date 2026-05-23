@@ -1,0 +1,430 @@
+{
+  "metadata": {
+    "name": "辽宁省新收费项目标准部分解读",
+    "version": "20260519",
+    "source": "用户上传图片：辽宁省新收费项目标准部分解读20260519",
+    "usage": "作为导管室工作台的院内解读/人工规则层，优先用于组合收费提示、关联收费项目提示、争议提醒。不要静默覆盖官方Excel原始数据；若与Excel价格冲突，应显示冲突提醒并按本院最终口径确认。"
+  },
+  "priceSourcePriority": "officialExcelFirst",
+  "manualBillingRules": [
+    {
+      "ruleId": "coronary_urokinase_thrombolysis",
+      "title": "术中使用尿激酶",
+      "triggerKeywords": [
+        "尿激酶",
+        "冠脉溶栓",
+        "冠状动脉溶栓",
+        "冠脉造影+尿激酶"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "unit": "次",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉溶栓费",
+          "unit": "次/血管口径",
+          "price": 2680
+        }
+      ],
+      "note": "术中使用尿激酶时，按冠状动脉造影费+冠状动脉溶栓费提示。"
+    },
+    {
+      "ruleId": "pci_two_vessels_stent",
+      "title": "同台两根血管PCI",
+      "triggerKeywords": [
+        "两根血管PCI",
+        "两支血管PCI",
+        "两根血管支架",
+        "多支血管支架"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "unit": "次",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "unit": "血管",
+          "price": 4980,
+          "quantityHint": "按治疗血管数量"
+        }
+      ],
+      "note": "一个患者一次做两根血管PCI：冠状动脉造影费2600元+冠状动脉支架置入费4980元×治疗血管数。"
+    },
+    {
+      "ruleId": "coronary_aspiration_catheter_debulking",
+      "title": "使用抽吸导管",
+      "triggerKeywords": [
+        "抽吸导管",
+        "血栓抽吸",
+        "冠脉取栓",
+        "吸栓",
+        "抽栓",
+        "冠脉减容"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "冠状动脉腔内减容费",
+          "unit": "血管",
+          "price": 5580,
+          "quantityHint": "按治疗血管数量"
+        }
+      ],
+      "note": "使用抽吸导管时，提示冠状动脉腔内减容费5580元。"
+    },
+    {
+      "ruleId": "coronary_stent_five_vessels_full_charge",
+      "title": "冠脉支架植入多根血管",
+      "triggerKeywords": [
+        "五根血管支架",
+        "5根血管支架",
+        "多根血管支架"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "冠状动脉支架置入费",
+          "unit": "血管",
+          "price": 4980,
+          "quantityHint": "每根计价血管分别按整费"
+        }
+      ],
+      "note": "冠脉支架植入术5根血管，做每根血管，分别计整费。"
+    },
+    {
+      "ruleId": "repeat_angiography_same_admission",
+      "title": "同一次住院复查造影",
+      "triggerKeywords": [
+        "复查造影",
+        "第二次造影",
+        "同次住院再次造影"
+      ],
+      "displayType": "manual_review",
+      "note": "同一次住院复查造影，如果第二次没有治疗项目，需要医生说明第二次造影目的，上报物价部研判。"
+    },
+    {
+      "ruleId": "same_admission_different_vessel_pci_ptca",
+      "title": "同次住院分两次不同血管PCI/PTCA",
+      "triggerKeywords": [
+        "分两次PCI",
+        "不同血管PCI",
+        "不同血管PTCA",
+        "分次PTCA"
+      ],
+      "note": "同一次住院，分两次对不同血管进行PCI和PTCA治疗：分别计整费。"
+    },
+    {
+      "ruleId": "coronary_stent_iabp_immediate_removal",
+      "title": "冠脉造影+支架+IABP",
+      "triggerKeywords": [
+        "IABP",
+        "主动脉内球囊反搏",
+        "球囊反搏"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "冠状动脉造影费",
+          "unit": "次",
+          "price": 2600
+        },
+        {
+          "itemName": "冠状动脉支架置入费",
+          "unit": "血管",
+          "price": 4980,
+          "quantityHint": "按治疗血管数量"
+        },
+        {
+          "itemName": "主动脉内球囊反搏安装费",
+          "unit": "次",
+          "price": 3000
+        },
+        {
+          "itemName": "主动脉内球囊反搏取出费",
+          "unit": "次",
+          "price": 566
+        }
+      ],
+      "note": "冠脉造影+支架植入术+IABP，急诊手术结束立即撤除IABP，按造影、支架、IABP安装、IABP取出提示。"
+    },
+    {
+      "ruleId": "coronary_complex_combo_full_charge_examples",
+      "title": "冠脉组合治疗分别计整费示例",
+      "triggerKeywords": [
+        "冠脉造影+支架",
+        "冠脉造影+血栓抽吸+支架",
+        "两根血管支架"
+      ],
+      "note": "冠脉造影+支架植入术（一根血管）；冠脉造影+两根血管支架；冠脉造影+血栓抽吸+支架植入术（一根血管）：按相应项目分别计整费。"
+    },
+    {
+      "ruleId": "af_ablation_base_combo_manual_20260519",
+      "title": "房颤射频消融基础组合",
+      "triggerKeywords": [
+        "房颤",
+        "心房颤动",
+        "AF",
+        "房颤射频",
+        "房颤消融",
+        "心房颤动消融",
+        "AF消融",
+        "房颤冷冻",
+        "房颤脉冲",
+        "PFA房颤"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "选择性静脉造影术",
+          "unit": "次",
+          "price": 2720,
+          "sourceType": "manualRule"
+        },
+        {
+          "itemName": "有创心内电生理检查费",
+          "unit": "次",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（复杂）",
+          "unit": "次",
+          "price": 3500,
+          "sourceType": "manualRule",
+          "warning": "图片解读表写为3500元；官方Excel原表为7500元，需按本院最终口径确认"
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "unit": "次",
+          "price": 900
+        }
+      ],
+      "doNotCharge": [
+        "房间隔分流术"
+      ],
+      "note": "房颤射频消融按选择性静脉造影术+有创心内电生理检查费+心律失常消融费（复杂）+心腔三维标测费提示；房间隔分流术不收费。"
+    },
+    {
+      "ruleId": "af_ablation_plus_premature_beat_ablation",
+      "title": "同时做房颤消融和室早消融",
+      "triggerKeywords": [
+        "房颤消融+室早",
+        "房颤射频+室早",
+        "房颤和室早消融"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "选择性静脉造影术",
+          "unit": "次",
+          "price": 2720,
+          "sourceType": "manualRule"
+        },
+        {
+          "itemName": "有创心内电生理检查费",
+          "unit": "次",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（复杂）",
+          "unit": "次",
+          "price": 3500,
+          "sourceType": "manualRule",
+          "warning": "图片解读表写为3500元；官方Excel原表为7500元，需按本院最终口径确认"
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "unit": "次",
+          "price": 900
+        },
+        {
+          "itemName": "心律失常消融费（常规）",
+          "unit": "次",
+          "price": 5772
+        }
+      ],
+      "note": "同时做房颤消融和室早消融，复杂消融与常规消融分别提示。"
+    },
+    {
+      "ruleId": "af_ablation_plus_laa_closure",
+      "title": "房颤消融+左心耳封堵",
+      "triggerKeywords": [
+        "房颤消融+左心耳",
+        "房颤射频+左心耳封堵",
+        "房颤+LAAO"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "选择性静脉造影术",
+          "unit": "次",
+          "price": 2720,
+          "sourceType": "manualRule"
+        },
+        {
+          "itemName": "有创心内电生理检查费",
+          "unit": "次",
+          "price": 1690
+        },
+        {
+          "itemName": "心律失常消融费（复杂）",
+          "unit": "次",
+          "price": 3500,
+          "sourceType": "manualRule",
+          "warning": "图片解读表写为3500元；官方Excel原表为7500元，需按本院最终口径确认"
+        },
+        {
+          "itemName": "心腔三维标测费",
+          "unit": "次",
+          "price": 900
+        },
+        {
+          "itemName": "结构性心脏病封堵费（常规）",
+          "unit": "次",
+          "price": 4100
+        }
+      ],
+      "note": "图片右侧末尾略有截断，结构性心脏病封堵费（常规）价格按Excel原表补全为4100元。"
+    },
+    {
+      "ruleId": "intracardiac_ultrasound_catheter_charge",
+      "title": "心腔内超声心动图检查费",
+      "triggerKeywords": [
+        "心腔内超声",
+        "ICE",
+        "心内超声",
+        "一次性心腔内超声导管"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "心腔内超声心动图检查费",
+          "unit": "次",
+          "price": 380
+        }
+      ],
+      "note": "射频术中使用一次性心腔内超声导管即可收费。"
+    },
+    {
+      "ruleId": "single_dual_leadless_pacemaker",
+      "title": "单腔/双腔/无导线永久起搏器",
+      "triggerKeywords": [
+        "单腔起搏器",
+        "双腔起搏器",
+        "无导线起搏器",
+        "永久起搏器",
+        "His起搏"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "永久起搏器安装费",
+          "unit": "次",
+          "price": 3220
+        },
+        {
+          "itemName": "心脏植入式装置适配费",
+          "unit": "次",
+          "price": 118
+        }
+      ],
+      "conditionalItems": [
+        {
+          "condition": "His起搏",
+          "itemName": "有创心内电生理检查费",
+          "unit": "次",
+          "price": 1690
+        }
+      ],
+      "note": "单腔、双腔或无导线永久起搏器：永久起搏器安装费+心脏植入式装置适配费；His起搏另提示有创心内电生理检查费。"
+    },
+    {
+      "ruleId": "three_chamber_pacemaker_or_defibrillator",
+      "title": "三腔起搏器/除颤器安装",
+      "triggerKeywords": [
+        "三腔起搏器",
+        "CRT",
+        "CRT-D",
+        "ICD",
+        "除颤器安装"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "永久起搏器安装费",
+          "unit": "次",
+          "price": 3220
+        },
+        {
+          "itemName": "永久起搏器安装费-三腔起搏器/除颤器安装（加收）",
+          "unit": "次",
+          "price": 1100
+        },
+        {
+          "itemName": "心脏植入式装置适配费",
+          "unit": "次",
+          "price": 118
+        }
+      ],
+      "conditionalItems": [
+        {
+          "condition": "His起搏",
+          "itemName": "有创心内电生理检查费",
+          "unit": "次",
+          "price": 1690
+        }
+      ],
+      "note": "三腔起搏器：永久起搏器安装费+三腔起搏器/除颤器安装加收+心脏植入式装置适配费；His起搏另提示有创心内电生理检查费。"
+    },
+    {
+      "ruleId": "trigeminal_microballoon_compression",
+      "title": "经皮穿刺三叉神经微球囊压迫扩张术",
+      "triggerKeywords": [
+        "三叉神经微球囊",
+        "三叉神经球囊压迫",
+        "三叉神经压迫扩张"
+      ],
+      "recommendedCombo": [
+        {
+          "itemName": "颅神经松解费",
+          "unit": "次",
+          "price": 5670
+        }
+      ],
+      "note": "经皮穿刺三叉神经微球囊压迫扩张术废止后，新标准按颅神经松解费5670元提示。"
+    },
+    {
+      "ruleId": "no_30_percent_charge_after_new_standard",
+      "title": "执行新标准后无30%收费方式",
+      "triggerKeywords": [
+        "30%收费",
+        "百分之三十收费",
+        "加收30%"
+      ],
+      "displayType": "policy_note",
+      "note": "执行收费新标准以后没有30%收费方式。"
+    },
+    {
+      "ruleId": "peripheral_unabolished_items_mapping",
+      "title": "外周手术无明确新项目",
+      "triggerKeywords": [
+        "外周",
+        "外周血管",
+        "下肢",
+        "上肢"
+      ],
+      "displayType": "manual_review",
+      "note": "外周手术有的没收费项目，如没有明确废止，则根据新旧项目映射关系查找收费依据。"
+    },
+    {
+      "ruleId": "cerebral_angiography_cap_manual_20260519",
+      "title": "全脑血管造影上限",
+      "triggerKeywords": [
+        "全脑血管造影",
+        "脑血管造影",
+        "全脑造影"
+      ],
+      "note": "全脑血管造影上限可以收到7280元，最多8根血管；需要医生手术记录描述清楚具体血管名称。",
+      "quantityRule": {
+        "quantityType": "angiography_vessel_count",
+        "capAmount": 7280,
+        "maxVesselHint": 8,
+        "requiresVesselNamesInOpNote": true
+      }
+    }
+  ]
+}
