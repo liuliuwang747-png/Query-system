@@ -3,6 +3,7 @@ import type { ApiRule } from "./api";
 import type { ChoicePrompt } from "./types";
 import { manualBillingRules } from "./associatedProcedureRules";
 import { applyProcedureAssistFeeRules } from "./procedureAssistFeeRules";
+import { findNeuroGroupProcedure, shouldUseNeuroGroupProcedure, type NeuroGroupProcedure } from "./data/neuroGroup";
 
 type SystemId = SystemGroup;
 
@@ -1038,6 +1039,76 @@ function addMissingOfficialActionWarning(warnings: string[], itemName: string, a
   warnings.push(`已识别“${actionName}”，但当前官方项目库未找到“${itemName}”，请补充官方项目库或人工确认收费目录。`);
 }
 
+function carotidStentLocationPrompt(input: string): ChoicePrompt {
+  return {
+    id: "carotid-stent-location",
+    type: "carotid_stent_location",
+    title: "请确认支架位置",
+    description: "颈动脉支架需要先确认颅内段、颅外段或颈动脉以下，再映射到对应收费项目。",
+    groups: [
+      {
+        title: "支架位置",
+        options: [
+          { label: "颅内段", query: `${input}+颅内段`, resultHint: "脑血管造影费 + 脑血管支架置入费" },
+          { label: "颅外段", query: `${input}+颅外段`, resultHint: "脑血管造影费 + 颈动脉支架置入术（需确认目录）" },
+          { label: "颈动脉以下", query: `${input}+颈动脉以下`, resultHint: "脑血管造影费 + 经皮动脉支架置入术（需确认目录）" },
+        ],
+      },
+    ],
+  };
+}
+
+function neuroGroupChargeItems(procedure: NeuroGroupProcedure, text: string, prompts: ChoicePrompt[]) {
+  const isCarotidLike = procedure.id === "carotid-stent-rule" || procedure.id === "carotid-stent-protection";
+  if (!isCarotidLike) return procedure.chargeItems;
+
+  const chargeItems = procedure.chargeItems.filter((name) => !name.includes("颈动脉支架置入相关"));
+  if (/颅内段/.test(text)) {
+    chargeItems.push("脑血管支架置入费（介入）");
+  } else if (/颅外段/.test(text)) {
+    chargeItems.push("颈动脉支架置入术");
+  } else if (/颈动脉以下|锁骨下/.test(text)) {
+    chargeItems.push("经皮动脉支架置入术");
+  } else {
+    prompts.push(carotidStentLocationPrompt(text));
+  }
+  return unique(chargeItems);
+}
+
+function addNeuroGroupProcedure(
+  procedure: NeuroGroupProcedure,
+  text: string,
+  items: BillingItem[],
+  recommendations: Recommendation[],
+  warnings: string[],
+  parsedFacts: string[],
+  parsedActions: string[],
+  choicePrompts: ChoicePrompt[],
+) {
+  warnings.push(...procedure.questions, ...procedure.specialNotes);
+  parsedFacts.push(`识别到外周血管 / 神经组术式：${procedure.procedureName}`);
+
+  for (const itemName of neuroGroupChargeItems(procedure, text, choicePrompts)) {
+    const officialItem = findItem(items, itemName);
+    const item = officialItem || manualNamedItem(itemName, "需确认", null);
+    if (!officialItem) {
+      warnings.push(`“${itemName}”需人工确认或补充官方项目库。`);
+    }
+    addRecommendation(recommendations, item, 1, `按神经组配合目录“${procedure.procedureName}”映射。`, {
+      systemId: "neuro_intervention",
+      systemName: systemName("neuro_intervention"),
+      systemGroup: "neuro_intervention",
+      actionName: procedure.procedureName,
+      clinicalTerm: text,
+      actualAction: procedure.procedureName,
+      reviews: officialItem ? [] : [`“${itemName}”未在官方 Excel 项目库中精确匹配，需人工确认。`],
+      recordAdvice: procedure.chargeExplanation,
+      tags: officialItem ? [] : ["需人工确认"],
+    });
+    parsedActions.push(`${procedure.procedureName} → ${itemName}`);
+  }
+}
+
 function sourceLabel(sourceRule: LatestComboRule) {
   return sourceRule.source === "manualBillingRules20260519" ? "manualBillingRules院内解读" : "最新收费明细标准";
 }
@@ -1358,6 +1429,45 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
   let groupId = "home";
   let groupName = "综合判断";
   let unsupportedMessage = "";
+
+  const neuroGroupProcedure = findNeuroGroupProcedure(text);
+  if (neuroGroupProcedure && shouldUseNeuroGroupProcedure(neuroGroupProcedure, text)) {
+    addNeuroGroupProcedure(neuroGroupProcedure, text, effectiveItems, recommendations, globalWarnings, parsedFacts, [], choicePrompts);
+    const parsedActions = recommendations.map((rec) => `${neuroGroupProcedure.procedureName} → ${rec.item.newName}`);
+    const systemGroups = [{
+      systemId: "neuro_intervention" as const,
+      systemName: systemName("neuro_intervention"),
+      recommendations,
+    }];
+    const procedureProfile: ProcedureProfile = {
+      procedureName: neuroGroupProcedure.procedureName,
+      systemGroup: "neuro_intervention",
+      systemCategory: "外周血管 / 神经组",
+      surgeryFeeItems: recommendations,
+      intraoperativeDrugs: neuroGroupProcedure.medications,
+      monitoringAndAssistItems: [],
+      monitoringAndAssistFeeItems: [],
+      lowValueConsumables: neuroGroupProcedure.consumables,
+      highValueConsumables: [],
+      nursingCooperationPoints: neuroGroupProcedure.nursingPoints,
+      operatorPreferences: [],
+      riskWarnings: unique(globalWarnings),
+      manualReviewItems: unique(recommendations.flatMap((rec) => rec.reviews)),
+    };
+    return {
+      input,
+      groupId: "neuro_intervention",
+      groupName: "外周血管 / 神经组",
+      recommendations,
+      unsupportedMessage,
+      globalWarnings: unique(globalWarnings),
+      parsedFacts: unique(parsedFacts),
+      parsedActions: unique(parsedActions),
+      choicePrompts,
+      systemGroups,
+      procedureProfile,
+    };
+  }
 
   if (/肿瘤|下肢|外周血管/.test(text)) {
     unsupportedMessage = "该组收费标准尚未导入，请上传对应价格表后启用。";

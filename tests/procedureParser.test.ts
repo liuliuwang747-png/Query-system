@@ -4,6 +4,7 @@ import { loadRuntimeData } from "../src/api";
 import { calculateEstimatedAmount, inferQuantityMeta } from "../src/quantityConfirmationRules";
 import type { BillingItem } from "../src/types";
 import itemsJson from "../src/data/items.generated.json";
+import { findNeuroGroupProcedure, isNeuroGroupListQuery, neuroGroupProcedures } from "../src/data/neuroGroup";
 
 const items = itemsJson as BillingItem[];
 const rules = [];
@@ -21,6 +22,29 @@ function includesName(list: string[], expected: string) {
     list.some((name) => name.includes(expected)),
     `期望包含 ${expected}，实际为：${list.join("、")}`,
   );
+}
+
+{
+  assert.ok(neuroGroupProcedures.length >= 8, "神经组至少应录入 8 个术式");
+  assert.ok(isNeuroGroupListQuery("神经组"), "搜索神经组应进入神经组术式列表");
+}
+
+{
+  const procedure = findNeuroGroupProcedure("急诊取栓");
+  assert.ok(procedure, "应识别急诊取栓");
+  assert.deepEqual(procedure.chargeItems, ["脑血管造影费", "脑血管腔内减容费（介入）"]);
+}
+
+{
+  const procedure = findNeuroGroupProcedure("颅内动脉瘤栓塞术");
+  assert.ok(procedure, "应识别颅内动脉瘤栓塞术");
+  assert.deepEqual(procedure.chargeItems, ["脑血管造影费", "颅内动脉瘤栓塞费（介入）"]);
+}
+
+{
+  const procedure = findNeuroGroupProcedure("颈动脉支架");
+  assert.ok(procedure, "应识别颈动脉支架");
+  assert.ok(procedure.questions.some((question) => question.includes("颅内段")), "颈动脉支架必须追问支架位置");
 }
 
 {
@@ -95,6 +119,12 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = names("急诊取栓");
+  includesName(output, "脑血管造影费");
+  includesName(output, "脑血管腔内减容费");
+}
+
+{
   const output = result("脑血管动脉瘤弹簧圈+支架辅助");
   const outputNames = output.recommendations.map((rec) => rec.item.newName);
   includesName(outputNames, "脑血管造影费");
@@ -112,6 +142,25 @@ function includesName(list: string[], expected: string) {
   includesName(output, "脑血管造影费");
   includesName(output, "颅内动脉瘤栓塞费");
   assert.ok(!output.some((name) => name.includes("脑血管支架置入费")), "颅内动脉瘤栓塞+支架不应另收脑血管支架置入费");
+}
+
+{
+  const output = names("颅内动脉瘤栓塞术");
+  includesName(output, "脑血管造影费");
+  includesName(output, "颅内动脉瘤栓塞费");
+  assert.ok(!output.some((name) => name.includes("脑血管支架置入费")), "颅内动脉瘤栓塞术不应另收脑血管支架置入费");
+}
+
+{
+  const output = result("颈动脉支架");
+  includesName(output.recommendations.map((rec) => rec.item.newName), "脑血管造影费");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "carotid_stent_location"), "颈动脉支架应提示选择颅内段/颅外段/颈动脉以下");
+}
+
+{
+  const output = names("颈动脉支架+颅内段");
+  includesName(output, "脑血管造影费");
+  includesName(output, "脑血管支架置入费");
 }
 
 {

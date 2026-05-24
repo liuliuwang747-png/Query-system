@@ -27,6 +27,13 @@ import {
 } from "./procedureCombinationSkill";
 import { inferQuantityMeta, labelForQuantityType, suffixForQuantityType } from "./quantityConfirmationRules";
 import { mainComboMeta, priceText } from "./resultComposer";
+import {
+  findNeuroGroupProcedure,
+  isNeuroGroupListQuery,
+  neuroGroupProcedures,
+  shouldUseNeuroGroupProcedure,
+  type NeuroGroupProcedure,
+} from "./data/neuroGroup";
 import "./styles.css";
 
 type Tab = "procedure" | "campus";
@@ -620,6 +627,93 @@ function ProcedureSelectionPage({
   );
 }
 
+function NeuroProcedureList({ onSelect }: { onSelect: (procedure: NeuroGroupProcedure) => void }) {
+  return (
+    <div className="neuro-procedure-list">
+      {neuroGroupProcedures.map((procedure) => (
+        <button className="simple-option" key={procedure.id} onClick={() => onSelect(procedure)}>
+          <span>
+            <strong>{procedure.procedureName}</strong>
+            <span>{procedure.chargeItems.join(" + ")}</span>
+          </span>
+          <ChevronRight size={18} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SupportSection({ title, items }: { title: string; items: string[] }) {
+  if (!items.length) return null;
+  return (
+    <section className="support-section">
+      <strong>{title}</strong>
+      <ul>
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function NeuroSupportPanel({ procedure }: { procedure: NeuroGroupProcedure }) {
+  return (
+    <section className="support-panel">
+      <div className="combo-title">手术配合资料</div>
+      <SupportSection title="手术配合要点" items={procedure.nursingPoints} />
+      <SupportSection title="术式收费说明" items={procedure.chargeExplanation} />
+      <SupportSection title="耗材准备" items={procedure.consumables} />
+      <SupportSection title="药品准备" items={procedure.medications} />
+      <SupportSection title="特殊提醒" items={procedure.specialNotes} />
+    </section>
+  );
+}
+
+function NeuroProcedureDetail({
+  procedure,
+  items,
+  rules,
+}: {
+  procedure: NeuroGroupProcedure;
+  items: BillingItem[];
+  rules: ApiRule[];
+}) {
+  const [query, setQuery] = useState(procedure.procedureName);
+  useEffect(() => {
+    setQuery(procedure.procedureName);
+  }, [procedure.id, procedure.procedureName]);
+  return (
+    <>
+      <ResultsPanel
+        result={analyzeProcedure(query, items, rules)}
+        onUsePrompt={(value) => {
+          setQuery(value);
+        }}
+      />
+      <NeuroSupportPanel procedure={procedure} />
+    </>
+  );
+}
+
+function NeuroGroupPage({ items, rules, onBack }: { items: BillingItem[]; rules: ApiRule[]; onBack: () => void }) {
+  const [activeProcedure, setActiveProcedure] = useState<NeuroGroupProcedure | null>(null);
+  return (
+    <>
+      <PageHeader
+        title={activeProcedure ? activeProcedure.procedureName : "神经组"}
+        subtitle={activeProcedure ? "收费组合先看结果，配合资料在下方" : "外周血管 / 神经组"}
+        onBack={activeProcedure ? () => setActiveProcedure(null) : onBack}
+      />
+      {activeProcedure ? (
+        <NeuroProcedureDetail procedure={activeProcedure} items={items} rules={rules} />
+      ) : (
+        <NeuroProcedureList onSelect={setActiveProcedure} />
+      )}
+    </>
+  );
+}
+
 const coronaryVessels: CoronaryVessel[] = [
   { label: "左主干", queryPrefix: "左主干" },
   { label: "前降支", queryPrefix: "前降支" },
@@ -832,13 +926,30 @@ function ProcedureSearchPage({ items, rules }: { items: BillingItem[]; rules: Ap
   const [route, setRoute] = useState<ProcedureRoute>("root");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<ReturnType<typeof analyzeProcedure> | null>(null);
+  const [showNeuroList, setShowNeuroList] = useState(false);
+  const [activeNeuroProcedure, setActiveNeuroProcedure] = useState<NeuroGroupProcedure | null>(null);
   const run = (value = input) => {
     if (!value.trim()) return;
+    setShowNeuroList(false);
+    setActiveNeuroProcedure(null);
+    const neuroProcedure = findNeuroGroupProcedure(value);
+    if (isNeuroGroupListQuery(value)) {
+      setResult(null);
+      setShowNeuroList(true);
+      return;
+    }
+    if (neuroProcedure && shouldUseNeuroGroupProcedure(neuroProcedure, value)) {
+      setResult(null);
+      setActiveNeuroProcedure(neuroProcedure);
+      return;
+    }
     setResult(analyzeProcedure(value, items, rules));
   };
   const resetToRoot = () => {
     setRoute("root");
     setResult(null);
+    setShowNeuroList(false);
+    setActiveNeuroProcedure(null);
   };
 
   if (route === "cardio") {
@@ -965,10 +1076,7 @@ function ProcedureSearchPage({ items, rules }: { items: BillingItem[]; rules: Ap
 
   if (route === "neuro") {
     return (
-      <ProcedureSelectionPage
-        title="神经组"
-        subtitle="治疗性脑血管术式默认加入脑血管造影；按血管、根数计价的项目会在结果中提示数量确认"
-        sections={neuroSections}
+      <NeuroGroupPage
         items={items}
         rules={rules}
         onBack={() => setRoute("peripheral")}
@@ -1005,6 +1113,15 @@ function ProcedureSearchPage({ items, rules }: { items: BillingItem[]; rules: Ap
           run(value);
         }}
       />
+      {showNeuroList && (
+        <NeuroProcedureList
+          onSelect={(procedure) => {
+            setShowNeuroList(false);
+            setActiveNeuroProcedure(procedure);
+          }}
+        />
+      )}
+      {activeNeuroProcedure && <NeuroProcedureDetail procedure={activeNeuroProcedure} items={items} rules={rules} />}
     </>
   );
 }

@@ -493,6 +493,45 @@ h3 {
   background: rgba(10, 132, 255, 0.1);
 }
 
+.neuro-procedure-list {
+  display: grid;
+  gap: 10px;
+}
+
+.support-panel {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.04);
+}
+
+.support-section {
+  padding: 10px 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.support-section:first-of-type {
+  border-top: 0;
+}
+
+.support-section strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.support-section ul {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .quick-entry-card {
   min-height: 78px;
   display: flex;

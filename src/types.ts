@@ -103,7 +103,12 @@ export type Recommendation = {
 
 export type ChoicePrompt = {
   id: string;
-  type: "ablation_disease" | "transseptal_puncture" | "selective_artery_angiography" | "device_adaptation";
+  type:
+    | "ablation_disease"
+    | "transseptal_puncture"
+    | "selective_artery_angiography"
+    | "device_adaptation"
+    | "carotid_stent_location";
   title: string;
   description?: string;
   groups: Array<{
