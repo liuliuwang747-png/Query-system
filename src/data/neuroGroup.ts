@@ -11,7 +11,18 @@ export type NeuroGroupProcedure = {
   consumables: string[];
   medications: string[];
   specialNotes: string[];
+  images: Array<{
+    title: string;
+    src: string;
+    description?: string;
+  }>;
   sourceText?: string;
+};
+
+const carotidChargeExampleImage = {
+  title: "术中收费系统示例",
+  src: "/images/neuro/neuro-charge-example.jpg",
+  description: "颈动脉/TCAR 相关术式收费录入示例，可点击查看大图。",
 };
 
 export const neuroGroupProcedures: NeuroGroupProcedure[] = [
@@ -28,6 +39,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["常规注射器 5 个", "纱布 2 包", "Y 阀，数量需询问", "输液器，数量需询问", "泥鳅导丝", "无菌尿不湿", "机头套", "11 号刀片", "三通 3 个"],
     medications: ["黑色凝胶", "肝素"],
     specialNotes: ["文档中的旧项目名称和价格只作配合资料参考，收费名称、单位和价格以官方 Excel 为准。"],
+    images: [],
   },
   {
     id: "spinal-artery-embolization",
@@ -42,6 +54,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["黑色胶", "马拉松导管", "0.01 sycorn 导丝", "6F70 Cook 鞘", "弹簧圈"],
     medications: [],
     specialNotes: [],
+    images: [],
   },
   {
     id: "tcar",
@@ -79,6 +92,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     ],
     medications: [],
     specialNotes: ["价格以官方 Excel 项目库为准，TCAR 组合规则作为院内配合和收费提醒。"],
+    images: [carotidChargeExampleImage],
   },
   {
     id: "intracranial-aneurysm-embolization",
@@ -93,6 +107,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["泥鳅短", "导尿包", "无线纱布 2 包", "输液器 3 个", "橙色 Y 阀 1 个，备用 2 个", "20ml 注射器 2 个", "10ml 注射器 2 个", "5ml 注射器 1 个", "1ml 注射器", "三通 3 个", "6F 腿鞘", "Cook 长鞘 90cm", "泥鳅软/硬", "5F MPA1 多功能管", "压力泵", "微森牌导引导管"],
     medications: ["盐水 + 3000 单位肝素 2 瓶", "1000 单位/ml 肝素，扩张前给肝素", "首剂肝素通常 3000 单位，按医嘱执行", "威视派克 2 瓶倒碗里", "碘伏倒弯盘"],
     specialNotes: ["支架辅助弹簧圈、密网支架或单纯密网支架已归入颅内动脉瘤栓塞费，不另收脑血管支架置入费。"],
+    images: [],
   },
   {
     id: "carotid-stent-rule",
@@ -107,6 +122,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: [],
     medications: [],
     specialNotes: ["经皮穿刺脑血管腔内球囊成形术 + 锁骨下动脉支架植入术时，文档提示手术费为脑血管支架置入费 + 经皮动脉支架置入术，需按本院最终口径确认。"],
+    images: [carotidChargeExampleImage],
   },
   {
     id: "cerebral-angiography",
@@ -121,6 +137,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["20ml 注射器 2 个", "10ml 注射器 2 个", "5ml 注射器 1 个", "外周泥鳅", "纱布", "三通 2 个", "Y 阀 1 个", "输液器 1 个", "120cm 延长管", "高压造影注射器", "500ml 盐水加压输液器", "桡动脉路径：Simmons2 + 5F 桡鞘", "股动脉路径：5F 腿鞘 + 4F 椎动脉管"],
     medications: ["500ml 盐水 + 3000 单位肝素用于加压输液器"],
     specialNotes: [],
+    images: [],
   },
   {
     id: "carotid-stent-protection",
@@ -135,6 +152,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["注射器 5 个", "三通 3 个", "泥鳅", "纱布 2 包", "6F 腿鞘", "刀片", "蚊钳"],
     medications: [],
     specialNotes: [],
+    images: [carotidChargeExampleImage],
   },
   {
     id: "emergency-thrombectomy",
@@ -149,6 +167,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     consumables: ["50ml 注射器 2 个", "20ml 注射器 5 个", "10ml 注射器 4 个", "5ml 注射器 1 个", "三通 5 个", "Y 阀 2 个", "6F 腿鞘", "通桥取栓支架"],
     medications: [],
     specialNotes: ["固定患者，尤其是局麻患者。"],
+    images: [],
   },
 ];
 

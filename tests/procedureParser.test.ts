@@ -45,6 +45,7 @@ function includesName(list: string[], expected: string) {
   const procedure = findNeuroGroupProcedure("颈动脉支架");
   assert.ok(procedure, "应识别颈动脉支架");
   assert.ok(procedure.questions.some((question) => question.includes("颅内段")), "颈动脉支架必须追问支架位置");
+  assert.ok(procedure.images.some((image) => image.src.includes("neuro-charge-example")), "颈动脉支架详情应带收费系统截图");
 }
 
 {

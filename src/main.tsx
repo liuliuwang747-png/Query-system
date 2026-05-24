@@ -657,15 +657,76 @@ function SupportSection({ title, items }: { title: string; items: string[] }) {
   );
 }
 
+function ImagePreview({
+  images,
+}: {
+  images: NeuroGroupProcedure["images"];
+}) {
+  const [activeImage, setActiveImage] = useState<NeuroGroupProcedure["images"][number] | null>(null);
+  if (!images.length) return null;
+  return (
+    <section className="support-section">
+      <strong>图片资料</strong>
+      <div className="image-preview-grid">
+        {images.map((image) => (
+          <button className="image-preview-button" key={image.src} onClick={() => setActiveImage(image)} type="button">
+            <img src={image.src} alt={image.title} loading="lazy" />
+            <span>{image.title}</span>
+            {image.description && <small>{image.description}</small>}
+          </button>
+        ))}
+      </div>
+      {activeImage && (
+        <div className="image-lightbox" role="dialog" aria-modal="true" onClick={() => setActiveImage(null)}>
+          <button className="lightbox-close" type="button" onClick={() => setActiveImage(null)}>关闭</button>
+          <img src={activeImage.src} alt={activeImage.title} onClick={(event) => event.stopPropagation()} />
+        </div>
+      )}
+    </section>
+  );
+}
+
 function NeuroSupportPanel({ procedure }: { procedure: NeuroGroupProcedure }) {
   return (
     <section className="support-panel">
       <div className="combo-title">手术配合资料</div>
       <SupportSection title="手术配合要点" items={procedure.nursingPoints} />
-      <SupportSection title="术式收费说明" items={procedure.chargeExplanation} />
       <SupportSection title="耗材准备" items={procedure.consumables} />
       <SupportSection title="药品准备" items={procedure.medications} />
       <SupportSection title="特殊提醒" items={procedure.specialNotes} />
+      <ImagePreview images={procedure.images} />
+      <SupportSection title="术式收费说明" items={procedure.chargeExplanation} />
+    </section>
+  );
+}
+
+function NeuroSupplementPanel({
+  result,
+  quantityValues,
+  onQuantityChange,
+  onUsePrompt,
+}: {
+  result: ReturnType<typeof analyzeProcedure>;
+  quantityValues: Partial<Record<QuantityType, string>>;
+  onQuantityChange: (type: QuantityType, value: string) => void;
+  onUsePrompt: (query: string) => void;
+}) {
+  const hasQuantity = result.recommendations.some((rec) => inferQuantityMeta(rec.item).needsQuantityConfirmation);
+  const hasPrompt = Boolean(result.choicePrompts?.length);
+  const hasWarnings =
+    result.globalWarnings.length > 0 ||
+    result.recommendations.some((rec) => rec.reviews.length || rec.exclusions.length);
+  if (!hasQuantity && !hasPrompt && !hasWarnings) return null;
+  return (
+    <section className="neuro-supplement">
+      <div className="combo-title">补充确认</div>
+      <ChoicePromptPanel prompts={result.choicePrompts} onUsePrompt={onUsePrompt} />
+      <QuantityConfirmationPanel
+        recommendations={result.recommendations}
+        quantityValues={quantityValues}
+        onQuantityChange={onQuantityChange}
+      />
+      {hasWarnings && <DisputePanel warnings={result.globalWarnings} recommendations={result.recommendations} />}
     </section>
   );
 }
@@ -674,24 +735,34 @@ function NeuroProcedureDetail({
   procedure,
   items,
   rules,
+  showTitle = true,
 }: {
   procedure: NeuroGroupProcedure;
   items: BillingItem[];
   rules: ApiRule[];
+  showTitle?: boolean;
 }) {
   const [query, setQuery] = useState(procedure.procedureName);
+  const [quantityValues, setQuantityValues] = useState<Partial<Record<QuantityType, string>>>({});
   useEffect(() => {
     setQuery(procedure.procedureName);
+    setQuantityValues({});
   }, [procedure.id, procedure.procedureName]);
+  const result = analyzeProcedure(query, items, rules);
   return (
     <>
-      <ResultsPanel
-        result={analyzeProcedure(query, items, rules)}
+      {showTitle && <h2 className="neuro-detail-heading">{procedure.procedureName}</h2>}
+      <CombinationSummary items={result.recommendations} quantityValues={quantityValues} />
+      <NeuroSupportPanel procedure={procedure} />
+      <NeuroSupplementPanel
+        result={result}
+        quantityValues={quantityValues}
+        onQuantityChange={(type, value) => setQuantityValues((prev) => ({ ...prev, [type]: value }))}
         onUsePrompt={(value) => {
           setQuery(value);
+          setQuantityValues({});
         }}
       />
-      <NeuroSupportPanel procedure={procedure} />
     </>
   );
 }
@@ -706,7 +777,7 @@ function NeuroGroupPage({ items, rules, onBack }: { items: BillingItem[]; rules:
         onBack={activeProcedure ? () => setActiveProcedure(null) : onBack}
       />
       {activeProcedure ? (
-        <NeuroProcedureDetail procedure={activeProcedure} items={items} rules={rules} />
+        <NeuroProcedureDetail procedure={activeProcedure} items={items} rules={rules} showTitle={false} />
       ) : (
         <NeuroProcedureList onSelect={setActiveProcedure} />
       )}

@@ -500,15 +500,23 @@ h3 {
 
 .support-panel {
   margin-top: 12px;
-  padding: 12px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.86);
   box-shadow: 0 10px 26px rgba(15, 23, 42, 0.04);
 }
 
+.neuro-detail-heading {
+  margin: 10px 2px 8px;
+  color: var(--text-main);
+  font-size: 24px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
 .support-section {
-  padding: 10px 0;
+  padding: 9px 0;
   border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 
@@ -530,6 +538,90 @@ h3 {
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.45;
+}
+
+.image-preview-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.image-preview-button {
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px;
+  text-align: left;
+  color: var(--text-main);
+  background: rgba(248, 250, 252, 0.88);
+}
+
+.image-preview-button img {
+  width: 100%;
+  max-height: 210px;
+  display: block;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.image-preview-button span,
+.image-preview-button small {
+  display: block;
+}
+
+.image-preview-button span {
+  margin-top: 7px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.image-preview-button small {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+.image-lightbox img {
+  max-width: 96vw;
+  max-height: 88vh;
+  border-radius: 12px;
+  background: #fff;
+  object-fit: contain;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+}
+
+.lightbox-close {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 14px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.neuro-supplement {
+  margin-top: 12px;
+}
+
+.neuro-supplement .choice-prompt-card,
+.neuro-supplement .vessel-question-card,
+.neuro-supplement .dispute-panel {
+  box-shadow: none;
 }
 
 .quick-entry-card {
