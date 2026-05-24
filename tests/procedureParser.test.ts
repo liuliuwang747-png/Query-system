@@ -33,6 +33,8 @@ function includesName(list: string[], expected: string) {
   const procedure = findNeuroGroupProcedure("急诊取栓");
   assert.ok(procedure, "应识别急诊取栓");
   assert.deepEqual(procedure.chargeItems, ["脑血管造影费", "脑血管腔内减容费（介入）"]);
+  assert.equal(procedure.priorityWarning, "固定患者，尤其是局麻患者。", "急诊取栓应在标题下方显示醒目安全提醒");
+  assert.ok(!procedure.specialNotes.includes("固定患者，尤其是局麻患者。"), "急诊取栓醒目提醒不应在特殊提醒中重复显示");
 }
 
 {
@@ -45,7 +47,47 @@ function includesName(list: string[], expected: string) {
   const procedure = findNeuroGroupProcedure("颈动脉支架");
   assert.ok(procedure, "应识别颈动脉支架");
   assert.ok(procedure.questions.some((question) => question.includes("颅内段")), "颈动脉支架必须追问支架位置");
-  assert.ok(procedure.images.some((image) => image.src.includes("neuro-charge-example")), "颈动脉支架详情应带收费系统截图");
+  assert.equal(procedure.images.length, 0, "收费系统截图只属于 TCAR，不应显示在颈动脉支架规则中");
+}
+
+{
+  const procedure = findNeuroGroupProcedure("TCAR");
+  assert.ok(procedure, "应识别 TCAR");
+  assert.ok(procedure.images.some((image) => image.src.includes("neuro-charge-example")), "TCAR 详情应显示收费系统截图");
+}
+
+{
+  const procedure = findNeuroGroupProcedure("脑保护伞下颈动脉支架置入术");
+  assert.ok(procedure, "应识别脑保护伞下颈动脉支架置入术");
+  assert.equal(procedure.images.length, 0, "收费系统截图只属于 TCAR，不应显示在脑保护伞术式中");
+}
+
+{
+  const procedure = findNeuroGroupProcedure("三叉神经微球囊压迫");
+  assert.ok(procedure, "应识别三叉神经微球囊压迫");
+  assert.equal(procedure.procedureName, "经皮穿刺三叉神经微球囊压迫扩张术");
+  assert.deepEqual(procedure.chargeItems, ["颅神经松解费"]);
+  assert.deepEqual(procedure.fluids, ["500ml 盐水", "50ml 造影剂"]);
+  assert.equal(procedure.anesthesia, "全麻");
+  assert.ok(procedure.nursingPoints.some((text) => text.includes("脚踏凳")), "应提示准备脚踏凳");
+  assert.ok(procedure.specialNotes.some((text) => text.includes("心率") && text.includes("血压")), "应提示压迫时生命体征变化");
+}
+
+{
+  assert.equal(findNeuroGroupProcedure("微球囊压迫")?.procedureName, "经皮穿刺三叉神经微球囊压迫扩张术");
+  assert.equal(findNeuroGroupProcedure("颅神经松解费")?.procedureName, "经皮穿刺三叉神经微球囊压迫扩张术");
+  const output = names("颅神经松解费");
+  includesName(output, "颅神经松解费");
+}
+
+{
+  const procedure = findNeuroGroupProcedure("硬脑膜动静脉瘘");
+  assert.ok(procedure, "应识别硬脑膜动静脉瘘");
+  assert.deepEqual(procedure.chargeItems, ["脑血管造影费", "脑血管栓塞费（介入）"]);
+  assert.ok(
+    procedure.chargeExplanation.some((text) => text.includes("原单纯脑动静脉瘘栓塞术") && text.includes("脑及颅内血管畸形栓塞术")),
+    "硬脑膜动静脉瘘应保留原始收费项目名称说明",
+  );
 }
 
 {

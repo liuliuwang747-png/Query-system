@@ -515,6 +515,18 @@ h3 {
   letter-spacing: 0;
 }
 
+.priority-warning {
+  margin: 8px 0 10px;
+  padding: 9px 11px;
+  border: 1px solid rgba(220, 38, 38, 0.22);
+  border-radius: 14px;
+  color: #991b1b;
+  background: rgba(220, 38, 38, 0.12);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 760;
+}
+
 .support-section {
   padding: 9px 0;
   border-top: 1px solid rgba(15, 23, 42, 0.06);
@@ -616,6 +628,16 @@ h3 {
 
 .neuro-supplement {
   margin-top: 12px;
+}
+
+.upfront-confirm {
+  margin-top: 10px;
+}
+
+.upfront-confirm .choice-prompt-card {
+  margin-top: 0;
+  border-color: rgba(10, 132, 255, 0.18);
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .neuro-supplement .choice-prompt-card,

@@ -691,8 +691,10 @@ function NeuroSupportPanel({ procedure }: { procedure: NeuroGroupProcedure }) {
     <section className="support-panel">
       <div className="combo-title">手术配合资料</div>
       <SupportSection title="手术配合要点" items={procedure.nursingPoints} />
+      <SupportSection title="液体准备" items={procedure.fluids} />
       <SupportSection title="耗材准备" items={procedure.consumables} />
       <SupportSection title="药品准备" items={procedure.medications} />
+      <SupportSection title="麻醉方式" items={procedure.anesthesia ? [procedure.anesthesia] : []} />
       <SupportSection title="特殊提醒" items={procedure.specialNotes} />
       <ImagePreview images={procedure.images} />
       <SupportSection title="术式收费说明" items={procedure.chargeExplanation} />
@@ -712,7 +714,8 @@ function NeuroSupplementPanel({
   onUsePrompt: (query: string) => void;
 }) {
   const hasQuantity = result.recommendations.some((rec) => inferQuantityMeta(rec.item).needsQuantityConfirmation);
-  const hasPrompt = Boolean(result.choicePrompts?.length);
+  const nonBlockingPrompts = result.choicePrompts?.filter((prompt) => prompt.type !== "carotid_stent_location") || [];
+  const hasPrompt = nonBlockingPrompts.length > 0;
   const hasWarnings =
     result.globalWarnings.length > 0 ||
     result.recommendations.some((rec) => rec.reviews.length || rec.exclusions.length);
@@ -720,7 +723,7 @@ function NeuroSupplementPanel({
   return (
     <section className="neuro-supplement">
       <div className="combo-title">补充确认</div>
-      <ChoicePromptPanel prompts={result.choicePrompts} onUsePrompt={onUsePrompt} />
+      <ChoicePromptPanel prompts={nonBlockingPrompts} onUsePrompt={onUsePrompt} />
       <QuantityConfirmationPanel
         recommendations={result.recommendations}
         quantityValues={quantityValues}
@@ -749,9 +752,25 @@ function NeuroProcedureDetail({
     setQuantityValues({});
   }, [procedure.id, procedure.procedureName]);
   const result = analyzeProcedure(query, items, rules);
+  const blockingPrompts = result.choicePrompts?.filter((prompt) => prompt.type === "carotid_stent_location") || [];
+  const needsUpfrontChoice = blockingPrompts.length > 0;
   return (
     <>
       {showTitle && <h2 className="neuro-detail-heading">{procedure.procedureName}</h2>}
+      {procedure.priorityWarning && <div className="priority-warning">{procedure.priorityWarning}</div>}
+      {needsUpfrontChoice && (
+        <section className="upfront-confirm">
+          <ChoicePromptPanel
+            prompts={blockingPrompts}
+            onUsePrompt={(value) => {
+              setQuery(value);
+              setQuantityValues({});
+            }}
+          />
+        </section>
+      )}
+      {needsUpfrontChoice ? null : (
+        <>
       <CombinationSummary items={result.recommendations} quantityValues={quantityValues} />
       <NeuroSupportPanel procedure={procedure} />
       <NeuroSupplementPanel
@@ -763,6 +782,8 @@ function NeuroProcedureDetail({
           setQuantityValues({});
         }}
       />
+        </>
+      )}
     </>
   );
 }
@@ -773,7 +794,13 @@ function NeuroGroupPage({ items, rules, onBack }: { items: BillingItem[]; rules:
     <>
       <PageHeader
         title={activeProcedure ? activeProcedure.procedureName : "神经组"}
-        subtitle={activeProcedure ? "收费组合先看结果，配合资料在下方" : "外周血管 / 神经组"}
+        subtitle={
+          activeProcedure
+            ? activeProcedure.id === "carotid-stent-rule" || activeProcedure.id === "carotid-stent-protection"
+              ? "先确认支架位置，再显示最终收费组合"
+              : "收费组合先看结果，配合资料在下方"
+            : "外周血管 / 神经组"
+        }
         onBack={activeProcedure ? () => setActiveProcedure(null) : onBack}
       />
       {activeProcedure ? (
