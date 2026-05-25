@@ -26,7 +26,7 @@ import {
   runProcedureCombinationSkill as analyzeProcedure,
 } from "./procedureCombinationSkill";
 import { inferQuantityMeta, labelForQuantityType, suffixForQuantityType } from "./quantityConfirmationRules";
-import { mainComboMeta, priceText } from "./resultComposer";
+import { mainComboMeta, priceText, quantityMultiplierText } from "./resultComposer";
 import {
   findNeuroGroupProcedure,
   isNeuroGroupListQuery,
@@ -206,13 +206,18 @@ function CombinationSummary({ items, quantityValues }: { items: Recommendation[]
       <div className="combo-chain">
         {items.map((rec, index) => {
           const quantityMeta = inferQuantityMeta(rec.item);
+          const showQuantityNote = quantityMeta.needsQuantityConfirmation && !rec.tags.includes("skip_quantity_note");
+          const multiplier = quantityMultiplierText(rec.quantity);
           return (
             <React.Fragment key={rec.id}>
               {index > 0 && <span className="combo-plus">+</span>}
-              <div className={`combo-item ${quantityMeta.needsQuantityConfirmation ? "quantity-sensitive" : ""}`}>
+              <div className={`combo-item ${showQuantityNote ? "quantity-sensitive" : ""}`}>
                 <strong>{rec.item.newName}</strong>
-                <span>{mainComboMeta(rec, quantityValues)}</span>
-                {quantityMeta.needsQuantityConfirmation && (
+                <span className="combo-meta">
+                  <span>{mainComboMeta(rec, quantityValues)}</span>
+                  {multiplier && <b className="quantity-multiplier">{multiplier}</b>}
+                </span>
+                {showQuantityNote && (
                   <div className="combo-quantity-note">
                     <b>需确认：{quantityMeta.label}</b>
                     {quantityMeta.ruleText && <small>{quantityMeta.ruleText}</small>}
@@ -345,6 +350,54 @@ function ChoicePromptPanel({ prompts, onUsePrompt }: { prompts?: ChoicePrompt[];
   );
 }
 
+function stripCcfScopeDecision(query: string) {
+  return query.replace(/\+?栓塞(?:仅动脉|仅静脉|数量\s*\d+)/g, "");
+}
+
+function CcfEmbolizationPanel({
+  prompt,
+  query,
+  onUsePrompt,
+}: {
+  prompt?: ChoicePrompt;
+  query: string;
+  onUsePrompt?: (query: string) => void;
+}) {
+  const [manualCount, setManualCount] = useState("");
+  if (!prompt) return null;
+  const baseQuery = stripCcfScopeDecision(query);
+  return (
+    <section className="ccf-scope-panel">
+      <strong>{prompt.title}</strong>
+      {prompt.description && <p>{prompt.description}</p>}
+      <div className="ccf-scope-buttons">
+        {prompt.groups.flatMap((group) => group.options).map((option) => (
+          <button key={option.label} type="button" onClick={() => option.query && onUsePrompt?.(option.query)}>
+            <b>{option.label}</b>
+            {option.resultHint && <small>{option.resultHint}</small>}
+          </button>
+        ))}
+      </div>
+      <div className="ccf-manual-row">
+        <input
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="其他数量"
+          value={manualCount}
+          onChange={(event) => setManualCount(event.target.value.replace(/\D/g, ""))}
+        />
+        <button
+          type="button"
+          disabled={!manualCount}
+          onClick={() => manualCount && onUsePrompt?.(`${baseQuery}+栓塞数量${manualCount}`)}
+        >
+          手动填写
+        </button>
+      </div>
+    </section>
+  );
+}
+
 function ResultsPanel({ result, onUsePrompt }: { result: ReturnType<typeof analyzeProcedure> | null; onUsePrompt?: (query: string) => void }) {
   const [activeTab, setActiveTab] = useState<(typeof workTabs)[number]>("手术费");
   const [quantityValues, setQuantityValues] = useState<Partial<Record<QuantityType, string>>>({});
@@ -389,10 +442,13 @@ function ResultsPanel({ result, onUsePrompt }: { result: ReturnType<typeof analy
       riskWarnings: result.globalWarnings,
       manualReviewItems: result.recommendations.flatMap((rec) => rec.reviews),
     };
+  const ccfPrompt = result.choicePrompts?.find((prompt) => prompt.type === "ccf_embolization_scope");
+  const visiblePrompts = result.choicePrompts?.filter((prompt) => prompt.type !== "ccf_embolization_scope");
   return (
     <div className="results-wrap">
-      <ChoicePromptPanel prompts={result.choicePrompts} onUsePrompt={onUsePrompt} />
+      <ChoicePromptPanel prompts={visiblePrompts} onUsePrompt={onUsePrompt} />
       <CombinationSummary items={profile.surgeryFeeItems} quantityValues={quantityValues} />
+      <CcfEmbolizationPanel prompt={ccfPrompt} query={result.input} onUsePrompt={onUsePrompt} />
       <QuantityConfirmationPanel
         recommendations={profile.surgeryFeeItems}
         quantityValues={quantityValues}
@@ -714,7 +770,7 @@ function NeuroSupplementPanel({
   onUsePrompt: (query: string) => void;
 }) {
   const hasQuantity = result.recommendations.some((rec) => inferQuantityMeta(rec.item).needsQuantityConfirmation);
-  const nonBlockingPrompts = result.choicePrompts?.filter((prompt) => prompt.type !== "carotid_stent_location") || [];
+  const nonBlockingPrompts = result.choicePrompts?.filter((prompt) => !["carotid_stent_location", "ccf_embolization_scope"].includes(prompt.type)) || [];
   const hasPrompt = nonBlockingPrompts.length > 0;
   const hasWarnings =
     result.globalWarnings.length > 0 ||
@@ -753,6 +809,7 @@ function NeuroProcedureDetail({
   }, [procedure.id, procedure.procedureName]);
   const result = analyzeProcedure(query, items, rules);
   const blockingPrompts = result.choicePrompts?.filter((prompt) => prompt.type === "carotid_stent_location") || [];
+  const ccfPrompt = result.choicePrompts?.find((prompt) => prompt.type === "ccf_embolization_scope");
   const needsUpfrontChoice = blockingPrompts.length > 0;
   return (
     <>
@@ -771,17 +828,25 @@ function NeuroProcedureDetail({
       )}
       {needsUpfrontChoice ? null : (
         <>
-      <CombinationSummary items={result.recommendations} quantityValues={quantityValues} />
-      <NeuroSupportPanel procedure={procedure} />
-      <NeuroSupplementPanel
-        result={result}
-        quantityValues={quantityValues}
-        onQuantityChange={(type, value) => setQuantityValues((prev) => ({ ...prev, [type]: value }))}
-        onUsePrompt={(value) => {
-          setQuery(value);
-          setQuantityValues({});
-        }}
-      />
+          <CombinationSummary items={result.recommendations} quantityValues={quantityValues} />
+          <CcfEmbolizationPanel
+            prompt={ccfPrompt}
+            query={query}
+            onUsePrompt={(value) => {
+              setQuery(value);
+              setQuantityValues({});
+            }}
+          />
+          <NeuroSupportPanel procedure={procedure} />
+          <NeuroSupplementPanel
+            result={result}
+            quantityValues={quantityValues}
+            onQuantityChange={(type, value) => setQuantityValues((prev) => ({ ...prev, [type]: value }))}
+            onUsePrompt={(value) => {
+              setQuery(value);
+              setQuantityValues({});
+            }}
+          />
         </>
       )}
     </>

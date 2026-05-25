@@ -247,6 +247,7 @@ const itemNameAliases: Record<string, string[]> = {
   "永久起搏器安装费/ICD相关安装费": ["永久起搏器安装费"],
   经导管主动脉瓣置换相关项目: ["主动脉瓣置换费（介入）"],
   TEER相关手术费: ["二尖瓣成形费（介入）"],
+  脑循环造影费: ["脑血管造影费"],
 };
 
 function compactItemName(value: string) {
@@ -1058,8 +1059,42 @@ function carotidStentLocationPrompt(input: string): ChoicePrompt {
   };
 }
 
+function ccfEmbolizationScopePrompt(input: string): ChoicePrompt {
+  return {
+    id: "ccf-embolization-scope",
+    type: "ccf_embolization_scope",
+    title: "本次动静脉瘘栓塞涉及哪些位置？",
+    description: "脑血管栓塞费按实际栓塞位置确认数量；脑血管球囊扩张费默认按 1 处/1 血管提示。",
+    groups: [
+      {
+        title: "栓塞位置",
+        options: [
+          { label: "仅动脉", query: `${input}+栓塞仅动脉`, resultHint: "脑血管栓塞费 ×1" },
+          { label: "仅静脉", query: `${input}+栓塞仅静脉`, resultHint: "脑血管栓塞费 ×1" },
+          { label: "动脉 + 静脉", query: `${input}+栓塞数量2`, resultHint: "脑血管栓塞费 ×2" },
+        ],
+      },
+    ],
+  };
+}
+
+function ccfEmbolizationQuantity(text: string) {
+  const manualMatch = text.match(/栓塞数量\s*(\d+)/);
+  if (manualMatch) return Math.max(1, Number(manualMatch[1]));
+  if (/栓塞仅动脉|栓塞仅静脉/.test(text)) return 1;
+  return 1;
+}
+
+function hasCcfEmbolizationDecision(text: string) {
+  return /栓塞仅动脉|栓塞仅静脉|栓塞数量\s*\d+/.test(text);
+}
+
 function neuroGroupChargeItems(procedure: NeuroGroupProcedure, text: string, prompts: ChoicePrompt[]) {
   const isCarotidLike = procedure.id === "carotid-stent-rule" || procedure.id === "carotid-stent-protection";
+  if (procedure.id === "ccf-embolization-carotid-balloon") {
+    if (!hasCcfEmbolizationDecision(text)) prompts.push(ccfEmbolizationScopePrompt(text));
+    return procedure.chargeItems;
+  }
   if (!isCarotidLike) return procedure.chargeItems;
 
   const chargeItems = procedure.chargeItems.filter((name) => !name.includes("颈动脉支架置入相关"));
@@ -1091,10 +1126,17 @@ function addNeuroGroupProcedure(
   for (const itemName of neuroGroupChargeItems(procedure, text, choicePrompts)) {
     const officialItem = findItem(items, itemName);
     const item = officialItem || manualNamedItem(itemName, "需确认", null);
+    const quantity = procedure.id === "ccf-embolization-carotid-balloon" && itemName.includes("脑血管栓塞费")
+      ? ccfEmbolizationQuantity(text)
+      : 1;
+    const tags = unique([
+      ...(officialItem ? [] : ["需人工确认"]),
+      ...(procedure.id === "ccf-embolization-carotid-balloon" && /脑血管栓塞费|脑血管球囊扩张费/.test(itemName) ? ["skip_quantity_note"] : []),
+    ]);
     if (!officialItem) {
       warnings.push(`“${itemName}”需人工确认或补充官方项目库。`);
     }
-    addRecommendation(recommendations, item, 1, `按神经组配合目录“${procedure.procedureName}”映射。`, {
+    addRecommendation(recommendations, item, quantity, `按神经组配合目录“${procedure.procedureName}”映射。`, {
       systemId: "neuro_intervention",
       systemName: systemName("neuro_intervention"),
       systemGroup: "neuro_intervention",
@@ -1103,7 +1145,7 @@ function addNeuroGroupProcedure(
       actualAction: procedure.procedureName,
       reviews: officialItem ? [] : [`“${itemName}”未在官方 Excel 项目库中精确匹配，需人工确认。`],
       recordAdvice: procedure.chargeExplanation,
-      tags: officialItem ? [] : ["需人工确认"],
+      tags,
     });
     parsedActions.push(`${procedure.procedureName} → ${itemName}`);
   }

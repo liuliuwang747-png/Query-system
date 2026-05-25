@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { runProcedureCombinationSkill as analyzeProcedure } from "../src/procedureCombinationSkill";
 import { loadRuntimeData } from "../src/api";
 import { calculateEstimatedAmount, inferQuantityMeta } from "../src/quantityConfirmationRules";
+import { quantityMultiplierText } from "../src/resultComposer";
 import type { BillingItem } from "../src/types";
 import itemsJson from "../src/data/items.generated.json";
 import { findNeuroGroupProcedure, isNeuroGroupListQuery, neuroGroupProcedures } from "../src/data/neuroGroup";
@@ -35,6 +36,10 @@ function includesName(list: string[], expected: string) {
   assert.deepEqual(procedure.chargeItems, ["脑血管造影费", "脑血管腔内减容费（介入）"]);
   assert.equal(procedure.priorityWarning, "固定患者，尤其是局麻患者。", "急诊取栓应在标题下方显示醒目安全提醒");
   assert.ok(!procedure.specialNotes.includes("固定患者，尤其是局麻患者。"), "急诊取栓醒目提醒不应在特殊提醒中重复显示");
+  assert.ok(procedure.consumables.includes("120cm 连接管 2 个"), "急诊取栓耗材应包含 120cm 连接管 2 个");
+  assert.ok(procedure.consumables.includes("尿不湿 1 个"), "急诊取栓耗材应包含尿不湿 1 个");
+  assert.ok(!procedure.consumables.includes("6F 腿鞘"), "急诊取栓耗材不再包含 6F 腿鞘");
+  assert.ok(!procedure.consumables.includes("通桥取栓支架"), "急诊取栓耗材不再包含通桥取栓支架");
 }
 
 {
@@ -88,6 +93,42 @@ function includesName(list: string[], expected: string) {
     procedure.chargeExplanation.some((text) => text.includes("原单纯脑动静脉瘘栓塞术") && text.includes("脑及颅内血管畸形栓塞术")),
     "硬脑膜动静脉瘘应保留原始收费项目名称说明",
   );
+}
+
+{
+  const procedure = findNeuroGroupProcedure("CCF球扩");
+  assert.ok(procedure, "应识别 CCF 球扩");
+  assert.equal(procedure.procedureName, "海绵窦动静脉瘘 + 颈动脉球扩");
+  assert.deepEqual(procedure.chargeItems, ["脑循环造影费", "脑血管栓塞费（介入）", "脑血管球囊扩张费（介入）"]);
+}
+
+{
+  const output = result("海绵窦动静脉瘘+颈动脉球扩");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管栓塞费");
+  includesName(outputNames, "脑血管球囊扩张费");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "ccf_embolization_scope"), "CCF 应提示确认动静脉瘘栓塞位置数量");
+  const balloon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管球囊扩张费"));
+  assert.equal(balloon?.quantity, 1, "CCF 球囊扩张默认按 1 处/1 血管提示");
+  assert.ok(balloon?.tags.includes("skip_quantity_note"), "CCF 球囊扩张不应触发动脉/静脉数量追问");
+}
+
+{
+  const output = result("海绵窦瘘+颈动脉球扩+栓塞数量2");
+  const embolization = output.recommendations.find((rec) => rec.item.newName.includes("脑血管栓塞费"));
+  const balloon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管球囊扩张费"));
+  assert.equal(embolization?.quantity, 2, "动脉+静脉时脑血管栓塞费应显示为 2 个数量");
+  assert.equal(balloon?.quantity, 1, "动脉+静脉不影响脑血管球囊扩张费数量");
+  assert.equal(quantityMultiplierText(embolization?.quantity || 1), "×2");
+  assert.equal(quantityMultiplierText(balloon?.quantity || 1), "");
+}
+
+{
+  const output = result("前降支冠脉支架+回旋支冠脉支架");
+  const stent = output.recommendations.find((rec) => rec.item.newName.includes("冠状动脉支架置入费"));
+  assert.equal(stent?.quantity, 2, "两支冠脉血管支架应合并显示为同一项目 ×2");
+  assert.equal(quantityMultiplierText(stent?.quantity || 1), "×2");
 }
 
 {

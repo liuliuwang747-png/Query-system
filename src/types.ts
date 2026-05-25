@@ -108,7 +108,8 @@ export type ChoicePrompt = {
     | "transseptal_puncture"
     | "selective_artery_angiography"
     | "device_adaptation"
-    | "carotid_stent_location";
+    | "carotid_stent_location"
+    | "ccf_embolization_scope";
   title: string;
   description?: string;
   groups: Array<{

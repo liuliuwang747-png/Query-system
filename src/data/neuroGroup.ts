@@ -189,7 +189,7 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     chargeExplanation: ["取栓、机械取栓、抽吸取栓、吸栓、清栓等在脑血管语境下按脑血管腔内减容费（介入）提示。"],
     nursingPoints: ["固定患者，尤其是局麻患者。"],
     fluids: [],
-    consumables: ["50ml 注射器 2 个", "20ml 注射器 5 个", "10ml 注射器 4 个", "5ml 注射器 1 个", "三通 5 个", "Y 阀 2 个", "6F 腿鞘", "通桥取栓支架"],
+    consumables: ["50ml 注射器 2 个", "20ml 注射器 5 个", "10ml 注射器 4 个", "5ml 注射器 1 个", "三通 5 个", "Y 阀 2 个", "120cm 连接管 2 个", "尿不湿 1 个"],
     medications: [],
     anesthesia: undefined,
     specialNotes: [],
@@ -211,6 +211,43 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     medications: [],
     anesthesia: "全麻",
     specialNotes: ["压迫时心率、血压可能会暴增，注意严密观察。", "该术式麻醉方式为全麻。"],
+    priorityWarning: undefined,
+    images: [],
+  },
+  {
+    id: "ccf-embolization-carotid-balloon",
+    category: "外周血管",
+    subCategory: "神经组",
+    procedureName: "海绵窦动静脉瘘 + 颈动脉球扩",
+    keywords: [
+      "海绵窦动静脉瘘",
+      "海绵窦瘘",
+      "颈动脉海绵窦瘘",
+      "颈内动脉海绵窦瘘",
+      "CCF",
+      "CCF栓塞",
+      "CCF球扩",
+      "海绵窦动静脉瘘栓塞",
+      "海绵窦瘘栓塞",
+      "颈动脉海绵窦瘘栓塞",
+      "海绵窦动静脉瘘球扩",
+      "海绵窦瘘+球扩",
+      "海绵窦瘘+颈动脉球扩",
+      "海绵窦动静脉瘘+颈动脉球扩",
+      "颈动脉球扩",
+      "颈内动脉球扩",
+      "颈动脉球囊扩张",
+      "颈内动脉球囊扩张",
+    ],
+    chargeItems: ["脑循环造影费", "脑血管栓塞费（介入）", "脑血管球囊扩张费（介入）"],
+    questions: ["请确认本次动静脉瘘栓塞涉及哪些位置：仅动脉、仅静脉、动脉+静脉，或手动填写数量。"],
+    chargeExplanation: ["脑循环造影费按脑血管造影费/脑血管造影相关项目别名处理，主界面显示官方 Excel 标准项目名称。脑血管球囊扩张费默认按 1 处/1 血管提示，不区分动脉或静脉。脑血管栓塞费需按动脉端、静脉端等实际栓塞位置确认数量。"],
+    nursingPoints: [],
+    fluids: [],
+    consumables: [],
+    medications: [],
+    anesthesia: undefined,
+    specialNotes: [],
     priorityWarning: undefined,
     images: [],
   },
@@ -236,6 +273,9 @@ export function findNeuroGroupProcedure(input: string) {
   }
   if (/颈动脉支架|颈内动脉支架|颈外段支架|颅内段支架|锁骨下动脉支架|颈动脉狭窄/.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "carotid-stent-rule");
+  }
+  if (/海绵窦动静脉瘘|海绵窦瘘|颈动脉海绵窦瘘|颈内动脉海绵窦瘘|CCF|ccf|颈动脉球扩|颈内动脉球扩|颈动脉球囊扩张|颈内动脉球囊扩张/.test(input)) {
+    return neuroGroupProcedures.find((procedure) => procedure.id === "ccf-embolization-carotid-balloon");
   }
   const matches = neuroGroupProcedures.filter((procedure) => {
     const clinicalNames = [procedure.procedureName, ...procedure.keywords].map(compact);
