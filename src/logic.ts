@@ -110,7 +110,7 @@ const systems: ProcedureSystem[] = [
   {
     id: "pacemaker",
     name: "起搏器系统",
-    keywords: /起搏器|临起|临时起搏|永久起搏器|电极导线|起搏线/i,
+    keywords: /起搏器|临起|临时起搏|永久起搏器|电极导线|起搏线|换机|换盒|脉冲发生器|电极调整|电极复位|电极位置调整/i,
   },
   {
     id: "electrophysiology",
@@ -762,6 +762,28 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
         : [],
     reviews: () => ["临时起搏器取出费只有在患者实际取出临时起搏器后才能收取。"],
     recordAdvice: ["取出时应单独记录实际取出时间、取出过程和电极导线是否完全移除。"],
+  },
+  {
+    systemId: "pacemaker",
+    actionId: "pacemaker-replacement",
+    actionName: "永久起搏器更换",
+    actualAction: "起搏器更换 / 脉冲发生器更换",
+    billingItemName: "永久起搏器更换费",
+    expressions: ["起搏器更换", "更换起搏器", "起搏器换机", "起搏器换盒", "脉冲发生器更换", "永久起搏器更换"],
+    isTherapeutic: true,
+    reason: "临床说法指向永久起搏器更换。心脏植入式装置适配费仅在起搏器更换或电极调整术时进入处置费模块。",
+    recordAdvice: ["写明更换原因、更换装置类型、是否进行装置连接和参数适配。"],
+  },
+  {
+    systemId: "pacemaker",
+    actionId: "pacemaker-electrode-adjustment",
+    actionName: "电极调整术",
+    actualAction: "起搏电极调整 / 复位 / 位置调整",
+    billingItemName: "电极调整术",
+    expressions: ["电极调整", "电极调整术", "起搏电极调整", "电极复位", "电极位置调整"],
+    isTherapeutic: true,
+    reason: "临床说法指向起搏电极调整术。心脏植入式装置适配费仅在起搏器更换或电极调整术时进入处置费模块。",
+    recordAdvice: ["写明电极调整原因、调整位置、参数测试和术后参数。"],
   },
   {
     systemId: "pacemaker",

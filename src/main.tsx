@@ -1050,10 +1050,10 @@ const pacemakerSections: SelectionSection[] = [
       { label: "双腔起搏器", query: "双腔起搏器" },
       { label: "三腔起搏器", query: "三腔起搏器" },
       { label: "ICD", query: "ICD" },
+      { label: "起搏器更换", query: "起搏器更换" },
       { label: "起搏器升级", query: "起搏器升级" },
       { label: "电极调整术", query: "电极调整术" },
       { label: "囊袋清创", query: "囊袋清创" },
-      { label: "术前程控 / 起搏器适配", query: "术前程控" },
     ],
   },
 ];
@@ -1202,7 +1202,7 @@ function ProcedureSearchPage({ items, rules }: { items: BillingItem[]; rules: Ap
     return (
       <ProcedureSelectionPage
         title="起搏器"
-        subtitle="临时起搏器取出费不在安装当次自动加入；适配费进入处置费模块"
+        subtitle="临时起搏器取出费不在安装当次自动加入；适配费仅限更换或电极调整"
         sections={pacemakerSections}
         items={items}
         rules={rules}

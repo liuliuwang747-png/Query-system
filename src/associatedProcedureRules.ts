@@ -58,6 +58,13 @@ function normalizeManualItem(item: RawManualItem) {
   };
 }
 
+function normalizeManualNote(rule: RawManualRule) {
+  if (rule.ruleId === "single_dual_leadless_pacemaker" || rule.ruleId === "three_chamber_pacemaker_or_defibrillator") {
+    return "心脏植入式装置适配费仅限起搏器更换或电极调整术；单腔、双腔、无导线、三腔、ICD、CRT/CRT-D 首次植入及植入手术后的初次调试不得收取。";
+  }
+  return rule.note;
+}
+
 function normalizeManualRule(rule: RawManualRule) {
   const combo = (rule.recommendedCombo || [])
     .filter((item) => item.itemName !== "心脏植入式装置适配费")
@@ -75,8 +82,8 @@ function normalizeManualRule(rule: RawManualRule) {
     triggers: rule.triggerKeywords || [],
     combo,
     conditionalItems,
-    manualReview: rule.displayType || !combo.length ? rule.note : undefined,
-    note: rule.note,
+    manualReview: rule.displayType || !combo.length ? normalizeManualNote(rule) : undefined,
+    note: normalizeManualNote(rule),
     priceSourcePriority: manualRules20260519.priceSourcePriority || "officialExcelFirst",
   };
 }

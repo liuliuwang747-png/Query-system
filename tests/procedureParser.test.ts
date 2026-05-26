@@ -397,7 +397,7 @@ function includesName(list: string[], expected: string) {
   includesName(outputNames, "永久起搏器安装费");
   assert.ok(!outputNames.some((name) => name.includes("心脏植入式装置适配费")), "起搏器适配费不能进入手术费主组合");
   assert.equal(output.procedureProfile?.monitoringAndAssistFeeItems.length, 0, "未明确术前程控时不默认加入适配费");
-  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "device_adaptation"), "起搏器植入应询问是否进行了术前程控/装置适配");
+  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "device_adaptation"), "首次植入不再询问术前程控/装置适配收费");
 }
 
 {
@@ -406,7 +406,8 @@ function includesName(list: string[], expected: string) {
   const assistNames = output.procedureProfile?.monitoringAndAssistFeeItems.map((rec) => rec.item.newName) || [];
   includesName(outputNames, "永久起搏器安装费");
   assert.ok(!outputNames.some((name) => name.includes("心脏植入式装置适配费")), "明确术前程控后，适配费仍不进入手术费主组合");
-  includesName(assistNames, "心脏植入式装置适配费");
+  assert.ok(!assistNames.some((name) => name.includes("心脏植入式装置适配费")), "首次植入术前程控不得自动加入适配费");
+  assert.ok(output.globalWarnings.some((warning) => warning.includes("初次调试不得收取")), "应提示植入手术后的初次调试不得收费");
 }
 
 {
@@ -415,7 +416,29 @@ function includesName(list: string[], expected: string) {
   const assistNames = output.procedureProfile?.monitoringAndAssistFeeItems.map((rec) => rec.item.newName) || [];
   includesName(outputNames, "永久起搏器安装费");
   includesName(outputNames, "三腔起搏器/除颤器安装");
+  assert.ok(!assistNames.some((name) => name.includes("心脏植入式装置适配费")), "三腔首次植入参数适配不得收取适配费");
+}
+
+{
+  const output = result("起搏器更换");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  const assistNames = output.procedureProfile?.monitoringAndAssistFeeItems.map((rec) => rec.item.newName) || [];
+  includesName(outputNames, "永久起搏器更换费");
   includesName(assistNames, "心脏植入式装置适配费");
+}
+
+{
+  const output = result("电极调整术");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  const assistNames = output.procedureProfile?.monitoringAndAssistFeeItems.map((rec) => rec.item.newName) || [];
+  includesName(outputNames, "电极调整术");
+  includesName(assistNames, "心脏植入式装置适配费");
+}
+
+{
+  const output = result("起搏器植入+术前程控");
+  const assistNames = output.procedureProfile?.monitoringAndAssistFeeItems.map((rec) => rec.item.newName) || [];
+  assert.ok(!assistNames.some((name) => name.includes("心脏植入式装置适配费")), "起搏器首次植入+术前程控不得自动收取适配费");
 }
 
 {
