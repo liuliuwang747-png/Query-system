@@ -410,15 +410,15 @@ function transseptalPrompt(input: string): ChoicePrompt {
   return {
     id: "transseptal-puncture",
     type: "transseptal_puncture",
-    title: "是否进行了房间隔穿刺？",
-    description: "房颤射频消融不收取房间隔分流费；其他心律失常消融如实际进行了房间隔穿刺，请加入房间隔分流费。",
+    title: "是否进行了房间隔分流术？",
+    description: "常规心律失常消融默认不加入房间隔分流费；如实际进行了房间隔分流术，请加入房间隔分流费。",
     groups: [
       {
-        title: "房间隔穿刺确认",
+        title: "房间隔分流术确认",
         options: [
-          { label: "是，加入房间隔分流费", query: `${input}+房间隔穿刺`, resultHint: "房间隔分流费" },
-          { label: "否，不加入", query: `${input}+未行房间隔穿刺`, resultHint: "保留当前射频消融组合" },
-          { label: "不确定，人工确认", query: `${input}+房间隔穿刺待确认`, resultHint: "保留当前组合并提示人工确认" },
+          { label: "是，加入房间隔分流术", query: `${input}+房间隔分流术`, resultHint: "房间隔分流费" },
+          { label: "否，不加入", query: `${input}+未行房间隔分流术`, resultHint: "保留当前射频消融组合" },
+          { label: "不确定，人工确认", query: `${input}+房间隔分流术待确认`, resultHint: "保留当前组合并提示人工确认" },
         ],
       },
     ],
@@ -448,8 +448,9 @@ function classifyElectrophysiologyAblation(input: string): "complex_af" | "compl
   const text = input.trim();
   if (/肥厚型心肌病|肥厚梗阻|HOCM|室间隔肥厚|室间隔消融|化学消融室间隔/i.test(text)) return "hcm";
   if (/房颤|心房颤动|AF|房颤射频|房颤冷冻|房颤脉冲|PFA/i.test(text)) return "complex_af";
+  if (/非器质性室速|非器质性心脏病的室性心动过速/i.test(text)) return "routine";
   if (/复杂心律失常消融|复杂消融|II型房扑|复杂房扑|器质性心脏病室速|器质性室速|VT伴器质性心脏病/i.test(text)) return "complex";
-  if (/常规心律失常消融|常规消融|普通消融|室上速|阵发性室上速|SVT|预激|预激综合征|旁道|AVNRT|AVRT|I型房扑|典型房扑|房早|房性早搏|室早|室性早搏|房速|房性心动过速|非器质性室速/i.test(text)) return "routine";
+  if (/常规心律失常消融|常规消融|普通消融|室上速|阵发性室上速|阵发性室上性心动过速|PSVT|SVT|预激|预激综合征|预激综合症|WPW|旁道|AVNRT|AVRT|I型房扑|I型心房扑动|一型房扑|典型房扑|房早|房性早搏|室早|室性早搏|PVC|房速|房性心动过速|非器质性室速|非器质性心脏病的室性心动过速|室性心动过速|室速|\bVT\b|\bAT\b/i.test(text)) return "routine";
   if (/^(射频消融|消融|心脏消融|心脏射频|心脏射频消融|心内射频|心内射频消融|导管消融|导管射频|导管射频消融|心律失常射频|心律失常射频消融|心律失常消融|心脏心律失常|心脏心律失常消融|心脏心律失常射频消融)$/.test(text)) return "needs_choice";
   return null;
 }
@@ -686,7 +687,7 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
     actionName: "心律失常消融",
     actualAction: "心律失常消融",
     billingItemName: "心律失常消融费（常规）",
-    expressions: ["室上速", "SVT", "阵发性室上速", "房速", "房性心动过速", "普通消融", "旁道", "预激", "预激综合征", "AVNRT", "AVRT", "I型房扑", "典型房扑", "房早", "房性早搏", "室早", "室性早搏", "非器质性室速"],
+    expressions: ["室上速", "SVT", "PSVT", "阵发性室上速", "阵发性室上性心动过速", "房速", "房性心动过速", "AT", "普通消融", "旁道", "预激", "预激综合征", "预激综合症", "WPW", "AVNRT", "AVRT", "I型房扑", "I型心房扑动", "一型房扑", "典型房扑", "房早", "房性早搏", "室早", "室性早搏", "PVC", "非器质性室速", "非器质性心脏病的室性心动过速", "室性心动过速", "室速", "VT"],
     isTherapeutic: true,
     reason: "临床说法指向心律失常消融，复杂/普通需结合价格表和院内规则判断。",
     reviews: () => ["心律失常消融复杂/普通分类需按价格表和院内规则确认。"],
@@ -1403,11 +1404,11 @@ function isBundledAneurysmStent(action: ProcedureAction, segment: string, fullTe
 }
 
 function hasDeniedTransseptalPuncture(input: string) {
-  return /未行房间隔穿刺|未做房间隔穿刺|无房间隔穿刺|不加房间隔分流费/.test(input);
+  return /未行房间隔穿刺|未做房间隔穿刺|无房间隔穿刺|未行房间隔分流术|未做房间隔分流术|无房间隔分流术|不加房间隔分流费/.test(input);
 }
 
 function hasPendingTransseptalPuncture(input: string) {
-  return /房间隔穿刺待确认|间隔费人工确认/.test(input);
+  return /房间隔穿刺待确认|房间隔分流术待确认|间隔费人工确认/.test(input);
 }
 
 function hasConfirmedTransseptalPuncture(input: string) {
@@ -1441,6 +1442,39 @@ function addSelectiveArteryAngiographyIfNeeded(input: string, recommendations: R
     tags: ["需人工确认"],
   });
   warnings.push("已提示选择性动脉造影费，但当前官方项目库未找到完全匹配项目，请人工确认收费目录。");
+}
+
+function addRoutineAblationBundle(items: BillingItem[], recommendations: Recommendation[], input: string, parsedActions: string[]) {
+  const bundle = [
+    { name: "有创心内电生理检查费", action: "电生理检查" },
+    { name: "心律失常消融费（常规）", action: "射频消融术（常规）" },
+    { name: "心腔三维标测费", action: "三维标测" },
+  ];
+  for (const entry of bundle) {
+    addRecommendation(recommendations, findItem(items, entry.name), 1, "常规心律失常射频消融基础组合：电生理检查 + 射频消融术（常规） + 三维标测。", {
+      systemId: "electrophysiology",
+      systemName: systemName("electrophysiology"),
+      systemGroup: "electrophysiology",
+      actionName: entry.action,
+      clinicalTerm: input,
+      actualAction: entry.action,
+      reviews: ["组合逻辑按院内规则提示；价格、单位、编码以Excel官方项目库为准。"],
+    });
+    parsedActions.push(`${systemName("electrophysiology")}：${input} → ${entry.name}`);
+  }
+  if (hasConfirmedTransseptalPuncture(input)) {
+    addRecommendation(recommendations, findItem(items, "房间隔分流费"), 1, "用户确认进行了房间隔分流术，加入房间隔分流费。", {
+      systemId: "electrophysiology",
+      systemName: systemName("electrophysiology"),
+      systemGroup: "electrophysiology",
+      actionName: "房间隔分流术",
+      clinicalTerm: input,
+      actualAction: "房间隔分流术",
+      reviews: ["房间隔分流费必须与实际操作和手术记录相符；未确认时不默认加入。"],
+      recordAdvice: ["写明是否实际进行了房间隔分流术。"],
+    });
+    parsedActions.push(`${systemName("electrophysiology")}：房间隔分流术 → 房间隔分流费`);
+  }
 }
 
 function scopedRuleWarnings(input: string, rules: ApiRule[], systemIds: SystemId[]) {
@@ -1639,6 +1673,7 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
   }
 
   if (ablationClass === "routine") {
+    addRoutineAblationBundle(effectiveItems, recommendations, text, parsedActions);
     if (!hasTransseptalDecision(text)) choicePrompts.push(transseptalPrompt(text));
     if (!hasSelectiveArteryDecision(text)) choicePrompts.push(selectiveArteryAngiographyPrompt(text));
     if (hasPendingTransseptalPuncture(text)) {

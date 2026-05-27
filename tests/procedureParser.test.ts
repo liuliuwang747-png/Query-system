@@ -596,6 +596,29 @@ function includesName(list: string[], expected: string) {
   assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "selective_artery_angiography"), "预激消融应询问是否进行了选择性动脉造影");
 }
 
+for (const input of ["阵发性室上性心动过速", "室上速", "预激综合征", "预激综合症", "I型心房扑动", "房性早搏", "房早", "室性早搏", "室早", "房性心动过速", "房速", "非器质性心脏病的室性心动过速", "非器质性室速", "室性心动过速", "室速", "PSVT", "WPW", "PVC", "AT", "VT"]) {
+  const output = result(input);
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "有创心内电生理检查费");
+  includesName(outputNames, "心律失常消融费（常规）");
+  includesName(outputNames, "心腔三维标测费");
+  assert.ok(!outputNames.some((name) => name.includes("房间隔分流费")), `${input} 默认不应加入房间隔分流费`);
+  assert.ok(
+    output.choicePrompts?.some((prompt) => prompt.type === "transseptal_puncture" && prompt.title.includes("房间隔分流术")),
+    `${input} 应追问是否进行了房间隔分流术`,
+  );
+}
+
+{
+  const output = result("室上速+房间隔分流术");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "有创心内电生理检查费");
+  includesName(outputNames, "心律失常消融费（常规）");
+  includesName(outputNames, "心腔三维标测费");
+  includesName(outputNames, "房间隔分流费");
+  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "transseptal_puncture"), "已选择是后不应重复追问房间隔分流术");
+}
+
 {
   const output = names("肥厚型心肌病消融");
   includesName(output, "肥厚型心肌病消融费");
