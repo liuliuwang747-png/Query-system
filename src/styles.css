@@ -932,7 +932,8 @@ h3 {
   color: var(--text-secondary);
 }
 
-.ccf-scope-panel {
+.ccf-scope-panel,
+.target-vessel-panel {
   margin-top: 10px;
   padding: 12px;
   border: 1px solid rgba(10, 132, 255, 0.16);
@@ -940,26 +941,30 @@ h3 {
   background: rgba(255, 255, 255, 0.9);
 }
 
-.ccf-scope-panel strong {
+.ccf-scope-panel strong,
+.target-vessel-panel strong {
   display: block;
   color: var(--text-main);
   font-size: 15px;
 }
 
-.ccf-scope-panel p {
+.ccf-scope-panel p,
+.target-vessel-panel p {
   margin: 6px 0 10px;
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.45;
 }
 
-.ccf-scope-buttons {
+.ccf-scope-buttons,
+.target-vessel-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
 .ccf-scope-buttons button,
+.target-vessel-buttons button,
 .ccf-manual-row button {
   min-height: 46px;
   border: 1px solid var(--border);
@@ -971,11 +976,14 @@ h3 {
 }
 
 .ccf-scope-buttons b,
-.ccf-scope-buttons small {
+.ccf-scope-buttons small,
+.target-vessel-buttons b,
+.target-vessel-buttons small {
   display: block;
 }
 
-.ccf-scope-buttons small {
+.ccf-scope-buttons small,
+.target-vessel-buttons small {
   margin-top: 3px;
   color: var(--text-secondary);
   font-size: 12px;

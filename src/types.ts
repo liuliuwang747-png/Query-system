@@ -109,7 +109,8 @@ export type ChoicePrompt = {
     | "selective_artery_angiography"
     | "device_adaptation"
     | "carotid_stent_location"
-    | "ccf_embolization_scope";
+    | "ccf_embolization_scope"
+    | "target_vessel_angiography";
   title: string;
   description?: string;
   groups: Array<{

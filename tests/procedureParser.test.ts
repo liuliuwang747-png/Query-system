@@ -132,6 +132,63 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = result("脑血管支架");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管支架置入费");
+  assert.ok(!outputNames.some((name) => name.includes("超过3根血管加收")), "未选择非靶血管造影前不默认加入超过3根加收");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "脑血管治疗类术式应询问是否只针对靶血管造影");
+  assert.ok(!JSON.stringify(output.choicePrompts || []).includes("一部"), "不应再询问一部");
+  assert.ok(!JSON.stringify(output.choicePrompts || []).includes("三部"), "不应再询问三部");
+}
+
+{
+  const output = result("脑血管支架+靶血管造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管支架置入费");
+  assert.ok(!outputNames.some((name) => name.includes("超过3根血管加收")), "只针对靶血管造影时不加入超过3根加收");
+  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "已选择靶血管造影后不重复询问");
+}
+
+{
+  const output = result("脑血管支架+全脑8根造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管支架置入费");
+  includesName(outputNames, "脑血管造影超过3根血管加收");
+  const surcharge = output.recommendations.find((rec) => rec.item.newName.includes("超过3根血管加收"));
+  assert.equal(surcharge?.quantity, 5, "非靶血管造影按8根计算时应显示超过3根加收×5");
+  assert.equal(quantityMultiplierText(surcharge?.quantity || 1), "×5");
+}
+
+{
+  const output = result("急诊取栓+全脑8根造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管腔内减容费");
+  includesName(outputNames, "脑血管造影超过3根血管加收");
+}
+
+{
+  const output = result("颅内动脉瘤栓塞术+全脑8根造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "颅内动脉瘤栓塞费");
+  includesName(outputNames, "脑血管造影超过3根血管加收");
+}
+
+{
+  const output = result("脑血管造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管造影费");
+  includesName(outputNames, "脑血管造影超过3根血管加收");
+  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "单纯脑血管造影不询问是否只针对靶血管");
+  const surcharge = output.recommendations.find((rec) => rec.item.newName.includes("超过3根血管加收"));
+  assert.equal(surcharge?.quantity, 5, "单纯脑血管造影默认按8根血管，超过3根加收×5");
+}
+
+{
   const output = names("脑血管溶栓+支架");
   includesName(output, "脑血管造影费");
   includesName(output, "脑血管腔内溶栓费");
