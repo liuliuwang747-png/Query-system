@@ -137,18 +137,19 @@ function includesName(list: string[], expected: string) {
   includesName(outputNames, "脑血管造影费");
   includesName(outputNames, "脑血管支架置入费");
   assert.ok(!outputNames.some((name) => name.includes("超过3根血管加收")), "未选择非靶血管造影前不默认加入超过3根加收");
-  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "脑血管治疗类术式应询问是否只针对靶血管造影");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.title.includes("脑血管造影血管数量是否超过 3 根")), "脑血管治疗类术式应询问造影血管数量是否超过3根");
+  assert.ok(!JSON.stringify(output.choicePrompts || []).includes("是否只针对靶血管造影"), "不应再询问是否只针对靶血管造影");
   assert.ok(!JSON.stringify(output.choicePrompts || []).includes("一部"), "不应再询问一部");
   assert.ok(!JSON.stringify(output.choicePrompts || []).includes("三部"), "不应再询问三部");
 }
 
 {
-  const output = result("脑血管支架+靶血管造影");
+  const output = result("脑血管支架+造影3根及以下");
   const outputNames = output.recommendations.map((rec) => rec.item.newName);
   includesName(outputNames, "脑血管造影费");
   includesName(outputNames, "脑血管支架置入费");
-  assert.ok(!outputNames.some((name) => name.includes("超过3根血管加收")), "只针对靶血管造影时不加入超过3根加收");
-  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "已选择靶血管造影后不重复询问");
+  assert.ok(!outputNames.some((name) => name.includes("超过3根血管加收")), "3根及以下造影不加入超过3根加收");
+  assert.ok(!output.choicePrompts?.some((prompt) => prompt.title.includes("脑血管造影血管数量是否超过 3 根")), "已选择造影根数后不重复询问");
 }
 
 {
@@ -160,6 +161,12 @@ function includesName(list: string[], expected: string) {
   const surcharge = output.recommendations.find((rec) => rec.item.newName.includes("超过3根血管加收"));
   assert.equal(surcharge?.quantity, 5, "非靶血管造影按8根计算时应显示超过3根加收×5");
   assert.equal(quantityMultiplierText(surcharge?.quantity || 1), "×5");
+}
+
+{
+  const output = result("脑血管造影5根");
+  const surcharge = output.recommendations.find((rec) => rec.item.newName.includes("超过3根血管加收"));
+  assert.equal(surcharge?.quantity, 2, "脑血管造影5根应显示超过3根加收×2");
 }
 
 {
@@ -183,7 +190,7 @@ function includesName(list: string[], expected: string) {
   const outputNames = output.recommendations.map((rec) => rec.item.newName);
   includesName(outputNames, "脑血管造影费");
   includesName(outputNames, "脑血管造影超过3根血管加收");
-  assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "target_vessel_angiography"), "单纯脑血管造影不询问是否只针对靶血管");
+  assert.ok(!JSON.stringify(output.choicePrompts || []).includes("是否只针对靶血管造影"), "单纯脑血管造影不询问是否只针对靶血管");
   const surcharge = output.recommendations.find((rec) => rec.item.newName.includes("超过3根血管加收"));
   assert.equal(surcharge?.quantity, 5, "单纯脑血管造影默认按8根血管，超过3根加收×5");
 }
@@ -295,13 +302,46 @@ function includesName(list: string[], expected: string) {
 {
   const output = result("颈动脉支架");
   includesName(output.recommendations.map((rec) => rec.item.newName), "脑血管造影费");
-  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "carotid_stent_location"), "颈动脉支架应提示选择颅内段/颅外段/颈动脉以下");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "carotid_stent_location"), "颈动脉支架应提示选择颅内段/颅外段");
+  assert.ok(!JSON.stringify(output.choicePrompts || []).includes("颈动脉以下"), "颈动脉支架位置追问不再出现颈动脉以下");
 }
 
 {
   const output = names("颈动脉支架+颅内段");
   includesName(output, "脑血管造影费");
   includesName(output, "脑血管支架置入费");
+  includesName(output, "脑血管支架置入费（介入）-颅内血管（加收）");
+  assert.ok(!output.some((name) => name.includes("颈动脉支架置入术")), "颅内段颈动脉支架不应使用旧颈动脉支架置入术");
+}
+
+{
+  const output = names("颈动脉支架+颅外段");
+  includesName(output, "脑血管造影费");
+  includesName(output, "脑血管支架置入费");
+  assert.ok(!output.some((name) => name.includes("颅内血管（加收）")), "颅外段颈动脉支架不加收颅内血管");
+  assert.ok(!output.some((name) => name.includes("颈动脉支架置入术")), "颅外段颈动脉支架也不再使用旧颈动脉支架置入术");
+}
+
+{
+  const output = result("脑血管支架+颅内段+治疗血管2根");
+  const stent = output.recommendations.find((rec) => rec.item.newName === "脑血管支架置入费（介入）");
+  const addon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管支架置入费（介入）-颅内血管"));
+  assert.equal(stent?.quantity, 2, "颅内支架主项目应按治疗血管数量动态显示×2");
+  assert.equal(addon?.quantity, 2, "颅内支架加收应按治疗血管数量动态显示×2");
+}
+
+{
+  const output = result("脑血管球囊扩张+颅内段+治疗血管2根");
+  const balloon = output.recommendations.find((rec) => rec.item.newName === "脑血管球囊扩张费（介入）");
+  const addon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管球囊扩张费（介入）-颅内血管"));
+  assert.equal(balloon?.quantity, 2, "颅内球囊主项目应按治疗血管数量动态显示×2");
+  assert.equal(addon?.quantity, 2, "颅内球囊加收应按治疗血管数量动态显示×2");
+}
+
+{
+  const output = result("颅内动脉瘤栓塞术+治疗血管2根");
+  const aneurysm = output.recommendations.find((rec) => rec.item.newName.includes("颅内动脉瘤栓塞费"));
+  assert.equal(aneurysm?.quantity, 2, "颅内动脉瘤栓塞应按治疗血管数量动态显示×2");
 }
 
 {
@@ -323,6 +363,42 @@ function includesName(list: string[], expected: string) {
   includesName(output, "脑血管造影费");
   includesName(output, "颅内动脉瘤栓塞费");
   assert.ok(!output.some((name) => name.includes("脑血管支架置入费")), "单纯密网支架应归入颅内动脉瘤栓塞费");
+}
+
+{
+  const output = result("脑动静脉瘘+栓塞数量2");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管栓塞费");
+  assert.ok(!outputNames.some((name) => name.includes("脑血管畸形栓塞")), "脑动静脉瘘不默认加脑血管畸形栓塞加收");
+  const embolization = output.recommendations.find((rec) => rec.item.newName === "脑血管栓塞费（介入）");
+  assert.equal(embolization?.quantity, 2, "动脉+静脉均栓塞时脑血管栓塞费显示×2");
+}
+
+{
+  const output = result("脑血管畸形栓塞+栓塞数量2");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "脑血管栓塞费");
+  includesName(outputNames, "脑血管栓塞费（介入）-脑血管畸形栓塞（加收）");
+  const embolization = output.recommendations.find((rec) => rec.item.newName === "脑血管栓塞费（介入）");
+  const addon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管畸形栓塞"));
+  assert.equal(embolization?.quantity, 2, "脑血管畸形栓塞主项目按血管数量×2");
+  assert.equal(addon?.quantity, 2, "脑血管畸形栓塞加收按血管数量×2");
+}
+
+{
+  const output = names("锁骨下动脉支架");
+  includesName(output, "经皮动脉支架置入术");
+  assert.ok(!output.some((name) => name.includes("脑血管支架置入费")), "锁骨下动脉支架不要误映射为脑血管支架置入费");
+}
+
+{
+  const output = result("慢性闭塞脑血管逆向再通+颅内血管+治疗血管2根");
+  includesName(output.recommendations.map((rec) => rec.item.newName), "慢性闭塞脑血管逆向再通费（介入）");
+  includesName(output.recommendations.map((rec) => rec.item.newName), "慢性闭塞脑血管逆向再通费（介入）-颅内血管（加收）");
+  const main = output.recommendations.find((rec) => rec.item.newName === "慢性闭塞脑血管逆向再通费（介入）");
+  const addon = output.recommendations.find((rec) => rec.item.newName.includes("慢性闭塞脑血管逆向再通费（介入）-颅内血管"));
+  assert.equal(main?.quantity, 2, "慢性闭塞脑血管逆向再通主项目按血管数量×2");
+  assert.equal(addon?.quantity, 2, "慢性闭塞脑血管逆向再通颅内加收按血管数量×2");
 }
 
 {

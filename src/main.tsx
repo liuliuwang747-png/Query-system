@@ -463,14 +463,16 @@ function ResultsPanel({ result, onUsePrompt }: { result: ReturnType<typeof analy
       manualReviewItems: result.recommendations.flatMap((rec) => rec.reviews),
     };
   const ccfPrompt = result.choicePrompts?.find((prompt) => prompt.type === "ccf_embolization_scope");
-  const targetVesselPrompt = result.choicePrompts?.find((prompt) => prompt.type === "target_vessel_angiography");
-  const visiblePrompts = result.choicePrompts?.filter((prompt) => !["ccf_embolization_scope", "target_vessel_angiography"].includes(prompt.type));
+  const targetVesselPrompt = result.choicePrompts?.find((prompt) => prompt.type === "neuro_angiography_vessel_count" || prompt.type === "target_vessel_angiography");
+  const fistulaBalloonPrompt = result.choicePrompts?.find((prompt) => prompt.type === "neuro_fistula_balloon");
+  const visiblePrompts = result.choicePrompts?.filter((prompt) => !["ccf_embolization_scope", "target_vessel_angiography", "neuro_angiography_vessel_count", "neuro_fistula_balloon"].includes(prompt.type));
   return (
     <div className="results-wrap">
       <ChoicePromptPanel prompts={visiblePrompts} onUsePrompt={onUsePrompt} />
       <CombinationSummary items={profile.surgeryFeeItems} quantityValues={quantityValues} />
       <CcfEmbolizationPanel prompt={ccfPrompt} query={result.input} onUsePrompt={onUsePrompt} />
       <TargetVesselAngiographyPanel prompt={targetVesselPrompt} onUsePrompt={onUsePrompt} />
+      <TargetVesselAngiographyPanel prompt={fistulaBalloonPrompt} onUsePrompt={onUsePrompt} />
       <QuantityConfirmationPanel
         recommendations={profile.surgeryFeeItems}
         quantityValues={quantityValues}
@@ -792,7 +794,7 @@ function NeuroSupplementPanel({
   onUsePrompt: (query: string) => void;
 }) {
   const hasQuantity = result.recommendations.some((rec) => inferQuantityMeta(rec.item).needsQuantityConfirmation);
-  const nonBlockingPrompts = result.choicePrompts?.filter((prompt) => !["carotid_stent_location", "ccf_embolization_scope", "target_vessel_angiography"].includes(prompt.type)) || [];
+  const nonBlockingPrompts = result.choicePrompts?.filter((prompt) => !["carotid_stent_location", "ccf_embolization_scope", "target_vessel_angiography", "neuro_angiography_vessel_count", "neuro_fistula_balloon"].includes(prompt.type)) || [];
   const hasPrompt = nonBlockingPrompts.length > 0;
   const hasWarnings =
     result.globalWarnings.length > 0 ||
@@ -832,7 +834,8 @@ function NeuroProcedureDetail({
   const result = analyzeProcedure(query, items, rules);
   const blockingPrompts = result.choicePrompts?.filter((prompt) => prompt.type === "carotid_stent_location") || [];
   const ccfPrompt = result.choicePrompts?.find((prompt) => prompt.type === "ccf_embolization_scope");
-  const targetVesselPrompt = result.choicePrompts?.find((prompt) => prompt.type === "target_vessel_angiography");
+  const targetVesselPrompt = result.choicePrompts?.find((prompt) => prompt.type === "neuro_angiography_vessel_count" || prompt.type === "target_vessel_angiography");
+  const fistulaBalloonPrompt = result.choicePrompts?.find((prompt) => prompt.type === "neuro_fistula_balloon");
   const needsUpfrontChoice = blockingPrompts.length > 0;
   return (
     <>
@@ -862,6 +865,13 @@ function NeuroProcedureDetail({
           />
           <TargetVesselAngiographyPanel
             prompt={targetVesselPrompt}
+            onUsePrompt={(value) => {
+              setQuery(value);
+              setQuantityValues({});
+            }}
+          />
+          <TargetVesselAngiographyPanel
+            prompt={fistulaBalloonPrompt}
             onUsePrompt={(value) => {
               setQuery(value);
               setQuantityValues({});

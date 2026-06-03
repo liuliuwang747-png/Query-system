@@ -110,7 +110,9 @@ export type ChoicePrompt = {
     | "device_adaptation"
     | "carotid_stent_location"
     | "ccf_embolization_scope"
-    | "target_vessel_angiography";
+    | "target_vessel_angiography"
+    | "neuro_angiography_vessel_count"
+    | "neuro_fistula_balloon";
   title: string;
   description?: string;
   groups: Array<{

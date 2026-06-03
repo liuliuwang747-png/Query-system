@@ -1077,48 +1077,62 @@ function neuroAngiographySurchargeItem(items: BillingItem[]): BillingItem {
   };
 }
 
-function hasTargetVesselOnlyDecision(input: string) {
-  return /靶血管造影|只针对靶血管|仅靶血管|只做靶血管/.test(input);
+function explicitNeuroAngioVesselCount(input: string) {
+  if (/全脑|全脑8根|8根造影|八根造影/.test(input)) return 8;
+  if (/造影\s*3\s*根(?:及以下|以内)?|3\s*根(?:及以下|以内).*造影/.test(input)) return 3;
+  const patterns = [
+    /造影(?:血管)?(?:数量)?\s*(\d+)\s*根/,
+    /(\d+)\s*根(?:血管)?造影/,
+    /脑血管造影\s*(\d+)\s*根/,
+  ];
+  for (const pattern of patterns) {
+    const match = input.match(pattern);
+    if (match) return Math.max(1, Number(match[1]));
+  }
+  return null;
 }
 
-function hasFullEightVesselAngiographyDecision(input: string) {
-  return /全脑8根造影|8根造影|八根造影|非靶血管造影|不是只针对靶血管|非只针对靶血管|全脑血管造影/.test(input);
+function hasNeuroAngioVesselDecision(input: string) {
+  return explicitNeuroAngioVesselCount(input) !== null || /造影3根及以下|造影3根以内/.test(input);
 }
 
-function hasTargetVesselAngiographyDecision(input: string) {
-  return hasTargetVesselOnlyDecision(input) || hasFullEightVesselAngiographyDecision(input);
-}
-
-function targetVesselAngiographyPrompt(input: string): ChoicePrompt {
+function neuroAngiographyVesselCountPrompt(input: string): ChoicePrompt {
   return {
-    id: "target-vessel-angiography",
-    type: "target_vessel_angiography",
-    title: "是否只针对靶血管造影？",
-    description: "选择“否”时按8根血管计算：脑血管造影费 + 超过3根血管加收×5。",
+    id: "neuro-angiography-vessel-count",
+    type: "neuro_angiography_vessel_count",
+    title: "本次脑血管造影血管数量是否超过 3 根？",
+    description: "3根及以下只收基础脑血管造影费；超过3根时按实际造影血管数量加收，最高不超过7280元。",
     groups: [
       {
-        title: "脑血管造影范围",
+        title: "造影血管数量",
         options: [
-          { label: "是", query: `${input}+靶血管造影`, resultHint: "脑血管造影费 + 对应治疗费" },
-          { label: "否", query: `${input}+全脑8根造影`, resultHint: "脑血管造影费 + 超过3根血管加收×5 + 对应治疗费" },
+          { label: "3 根及以下", query: `${input}+造影3根及以下`, resultHint: "脑血管造影费" },
+          { label: "按全脑 8 根", query: `${input}+全脑8根造影`, resultHint: "脑血管造影费 + 超过3根血管加收×5" },
         ],
       },
     ],
   };
 }
 
-function addNeuroAngiographySurcharge(items: BillingItem[], recommendations: Recommendation[], input: string, reason: string) {
-  addRecommendation(recommendations, neuroAngiographySurchargeItem(items), 5, reason, {
+function addNeuroAngiographySurcharge(items: BillingItem[], recommendations: Recommendation[], input: string, reason: string, extraCount = 5) {
+  const quantity = Math.max(1, extraCount);
+  addRecommendation(recommendations, neuroAngiographySurchargeItem(items), quantity, reason, {
     systemId: "neuro_intervention",
     systemName: systemName("neuro_intervention"),
     systemGroup: "neuro_intervention",
     actionName: "脑血管造影超过3根血管加收",
     clinicalTerm: input,
     actualAction: "脑血管造影超过3根血管加收",
-    reviews: ["按8根血管计算：基础3根及以下另加超过3根血管加收×5；价格由Excel官方脑血管造影费计价说明折算。"],
+    reviews: [`脑血管造影按实际血管数量计算：基础3根及以下另加超过3根血管加收×${quantity}；价格由Excel官方脑血管造影费计价说明折算，最高限价不超过7280元。`],
     recordAdvice: ["手术记录写明造影血管范围和具体血管名称。"],
     tags: ["skip_quantity_note"],
   });
+}
+
+function addNeuroAngiographySurchargeByDecision(items: BillingItem[], recommendations: Recommendation[], input: string, reason: string) {
+  const count = explicitNeuroAngioVesselCount(input) ?? 8;
+  if (count <= 3) return;
+  addNeuroAngiographySurcharge(items, recommendations, input, reason, count - 3);
 }
 
 function missingOfficialActionItem(action: ProcedureAction): BillingItem {
@@ -1134,14 +1148,32 @@ function carotidStentLocationPrompt(input: string): ChoicePrompt {
     id: "carotid-stent-location",
     type: "carotid_stent_location",
     title: "请确认支架位置",
-    description: "颈动脉支架需要先确认颅内段、颅外段或颈动脉以下，再映射到对应收费项目。",
+    description: "颈动脉支架不再使用旧“颈动脉支架置入术”；颅内段和颅外段主项目均按脑血管支架置入费（介入）提示。",
     groups: [
       {
         title: "支架位置",
         options: [
-          { label: "颅内段", query: `${input}+颅内段`, resultHint: "脑血管造影费 + 脑血管支架置入费" },
-          { label: "颅外段", query: `${input}+颅外段`, resultHint: "脑血管造影费 + 颈动脉支架置入术（需确认目录）" },
-          { label: "颈动脉以下", query: `${input}+颈动脉以下`, resultHint: "脑血管造影费 + 经皮动脉支架置入术（需确认目录）" },
+          { label: "颅内段", query: `${input}+颅内段`, resultHint: "脑血管支架置入费 + 颅内血管加收" },
+          { label: "颅外段", query: `${input}+颅外段`, resultHint: "脑血管支架置入费，不加颅内加收" },
+        ],
+      },
+    ],
+  };
+}
+
+function neuroFistulaBalloonPrompt(input: string): ChoicePrompt {
+  return {
+    id: "neuro-fistula-balloon",
+    type: "neuro_fistula_balloon",
+    title: "是否合并颈内动脉 / 颈动脉球囊扩张？",
+    description: "基础费用先按脑血管造影费 + 脑血管栓塞费提示；如合并球囊扩张，再按颅外段或颅内段追加。",
+    groups: [
+      {
+        title: "球囊扩张确认",
+        options: [
+          { label: "否", query: `${input}+未合并球囊扩张`, resultHint: "不追加球囊扩张费" },
+          { label: "是，颅外段球囊扩张", query: `${input}+颅外段球囊扩张`, resultHint: "脑血管球囊扩张费" },
+          { label: "是，颅内段球囊扩张", query: `${input}+颅内段球囊扩张`, resultHint: "脑血管球囊扩张费 + 颅内血管加收" },
         ],
       },
     ],
@@ -1178,21 +1210,53 @@ function hasCcfEmbolizationDecision(text: string) {
   return /栓塞仅动脉|栓塞仅静脉|栓塞数量\s*\d+/.test(text);
 }
 
+function neuroTreatmentVesselCount(text: string) {
+  const patterns = [
+    /治疗血管\s*(\d+)\s*根/,
+    /治疗血管数量\s*(\d+)/,
+    /(?:支架|球囊|取栓|抽吸|减容|栓塞|动脉瘤|再通)(?:涉及)?\s*(\d+)\s*根/,
+    /(\d+)\s*根(?:治疗血管|支架血管|球囊血管|栓塞血管)/,
+  ];
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) return Math.max(1, Number(match[1]));
+  }
+  return 1;
+}
+
+function isIntracranialNeuroTreatment(text: string) {
+  return /颅内段|颅内血管|颅内动脉|颅内支架|颅内球囊|脑静脉窦|静脉窦/.test(text);
+}
+
+function hasExplicitBalloonDecision(text: string) {
+  return /未合并球囊扩张|颅外段球囊扩张|颅内段球囊扩张/.test(text);
+}
+
 function neuroGroupChargeItems(procedure: NeuroGroupProcedure, text: string, prompts: ChoicePrompt[]) {
   const isCarotidLike = procedure.id === "carotid-stent-rule" || procedure.id === "carotid-stent-protection";
   if (procedure.id === "ccf-embolization-carotid-balloon") {
     if (!hasCcfEmbolizationDecision(text)) prompts.push(ccfEmbolizationScopePrompt(text));
     return procedure.chargeItems;
   }
+  if (procedure.id === "davf-embolization") {
+    if (!hasCcfEmbolizationDecision(text)) prompts.push(ccfEmbolizationScopePrompt(text));
+    if (!hasExplicitBalloonDecision(text)) prompts.push(neuroFistulaBalloonPrompt(text));
+    const chargeItems = [...procedure.chargeItems];
+    if (/颅外段球囊扩张/.test(text)) chargeItems.push("脑血管球囊扩张费（介入）");
+    if (/颅内段球囊扩张/.test(text)) chargeItems.push("脑血管球囊扩张费（介入）", "脑血管球囊扩张费（介入）-颅内血管（加收）");
+    return unique(chargeItems);
+  }
   if (!isCarotidLike) return procedure.chargeItems;
 
   const chargeItems = procedure.chargeItems.filter((name) => !name.includes("颈动脉支架置入相关"));
-  if (/颅内段/.test(text)) {
-    chargeItems.push("脑血管支架置入费（介入）");
-  } else if (/颅外段/.test(text)) {
-    chargeItems.push("颈动脉支架置入术");
-  } else if (/颈动脉以下|锁骨下/.test(text)) {
+  if (/锁骨下/.test(text)) {
     chargeItems.push("经皮动脉支架置入术");
+    return unique(chargeItems);
+  }
+  if (/颅内段/.test(text)) {
+    chargeItems.push("脑血管支架置入费（介入）", "脑血管支架置入费（介入）-颅内血管（加收）");
+  } else if (/颅外段/.test(text)) {
+    chargeItems.push("脑血管支架置入费（介入）");
   } else {
     prompts.push(carotidStentLocationPrompt(text));
   }
@@ -1212,6 +1276,19 @@ function isNeuroGroupAngiographyOnly(procedure: NeuroGroupProcedure) {
   return procedure.id === "cerebral-angiography";
 }
 
+function isNeuroTreatmentChargeItem(itemName: string) {
+  return /脑血管支架置入费|脑血管球囊扩张费|脑血管栓塞费|颅内动脉瘤栓塞费|脑血管腔内减容费|慢性闭塞脑血管逆向再通费|脊髓血管栓塞费/.test(itemName);
+}
+
+function neuroGroupItemQuantity(procedure: NeuroGroupProcedure, itemName: string, text: string) {
+  if (isBrainAngiographyItemName(itemName) || /脑血管造影超过3根/.test(itemName)) return 1;
+  if ((procedure.id === "ccf-embolization-carotid-balloon" || procedure.id === "davf-embolization" || procedure.id === "brain-avm-embolization") && itemName.includes("脑血管栓塞费")) {
+    return ccfEmbolizationQuantity(text);
+  }
+  if (isNeuroTreatmentChargeItem(itemName)) return neuroTreatmentVesselCount(text);
+  return 1;
+}
+
 function addNeuroGroupProcedure(
   procedure: NeuroGroupProcedure,
   text: string,
@@ -1225,19 +1302,18 @@ function addNeuroGroupProcedure(
   warnings.push(...procedure.questions, ...procedure.specialNotes);
   parsedFacts.push(`识别到外周血管 / 神经组术式：${procedure.procedureName}`);
   const brainTreatment = isNeuroGroupBrainTreatment(procedure);
-  if (brainTreatment && !hasTargetVesselAngiographyDecision(text)) {
-    choicePrompts.push(targetVesselAngiographyPrompt(text));
+  if (brainTreatment && !hasNeuroAngioVesselDecision(text)) {
+    choicePrompts.push(neuroAngiographyVesselCountPrompt(text));
   }
 
   for (const itemName of neuroGroupChargeItems(procedure, text, choicePrompts)) {
     const officialItem = findItem(items, itemName);
     const item = officialItem || manualNamedItem(itemName, "需确认", null);
-    const quantity = procedure.id === "ccf-embolization-carotid-balloon" && itemName.includes("脑血管栓塞费")
-      ? ccfEmbolizationQuantity(text)
-      : 1;
+    const quantity = neuroGroupItemQuantity(procedure, itemName, text);
     const tags = unique([
       ...(officialItem ? [] : ["需人工确认"]),
       ...(procedure.id === "ccf-embolization-carotid-balloon" && /脑血管栓塞费|脑血管球囊扩张费/.test(itemName) ? ["skip_quantity_note"] : []),
+      ...(procedure.id === "davf-embolization" && /脑血管栓塞费/.test(itemName) ? ["skip_quantity_note"] : []),
       ...(isBrainAngiographyItemName(itemName) ? ["skip_quantity_note"] : []),
     ]);
     if (!officialItem) {
@@ -1256,10 +1332,10 @@ function addNeuroGroupProcedure(
     });
     parsedActions.push(`${procedure.procedureName} → ${itemName}`);
   }
-  if (isNeuroGroupAngiographyOnly(procedure) || (brainTreatment && hasFullEightVesselAngiographyDecision(text))) {
-    addNeuroAngiographySurcharge(items, recommendations, text, isNeuroGroupAngiographyOnly(procedure)
-      ? "单纯脑血管造影按8根血管处理：基础脑血管造影费 + 超过3根血管加收×5。"
-      : "非靶血管造影按8根血管处理：基础脑血管造影费 + 超过3根血管加收×5。");
+  if (isNeuroGroupAngiographyOnly(procedure) || (brainTreatment && hasNeuroAngioVesselDecision(text))) {
+    addNeuroAngiographySurchargeByDecision(items, recommendations, text, isNeuroGroupAngiographyOnly(procedure)
+      ? "单纯脑血管造影默认按全脑8根显示；如非8根，请填写实际造影血管数量。"
+      : "按已确认的脑血管造影血管数量计算超过3根加收。");
   }
 }
 
@@ -1404,7 +1480,7 @@ function addBaseAngiography(systemId: SystemId, items: BillingItem[], recommenda
       tags: ["skip_quantity_note"],
     });
     if (roots > 3) {
-      addNeuroAngiographySurcharge(items, recommendations, input, "输入明确造影血管超过3根，按脑血管造影计价说明提示超过3根加收。");
+      addNeuroAngiographySurcharge(items, recommendations, input, "输入明确造影血管超过3根，按脑血管造影计价说明提示超过3根加收。", roots - 3);
     }
   }
   if (systemId === "coronary_intervention") {
@@ -1478,10 +1554,48 @@ function quantityForAction(action: ProcedureAction, segment: string, fullText: s
     const vessels = mentionedVessels(`${segment} ${fullText}`).filter((vessel) => vessel.id !== "RI");
     return Math.max(1, vessels.length || 0);
   }
+  if (action.systemId === "neuro_intervention" && [
+    "neuro-stent",
+    "neuro-balloon",
+    "neuro-debulking",
+    "neuro-embolization",
+    "neuro-aneurysm-embolization",
+    "neuro-cto-recanalization",
+  ].includes(action.id)) {
+    return neuroTreatmentVesselCount(`${segment} ${fullText}`);
+  }
   if (action.systemId === "neuro_intervention" && /颅内.*颅外|颅外.*颅内/.test(`${segment} ${fullText}`)) {
     return 2;
   }
   return 1;
+}
+
+function neuroIntracranialAddonNameForAction(action: ProcedureAction) {
+  if (action.id === "neuro-stent") return "脑血管支架置入费（介入）-颅内血管（加收）";
+  if (action.id === "neuro-balloon") return "脑血管球囊扩张费（介入）-颅内血管（加收）";
+  if (action.id === "neuro-cto-recanalization") return "慢性闭塞脑血管逆向再通费（介入）-颅内血管（加收）";
+  return "";
+}
+
+function addNeuroIntracranialAddonIfNeeded(
+  action: ProcedureAction,
+  items: BillingItem[],
+  recommendations: Recommendation[],
+  input: string,
+  quantity: number,
+) {
+  const addonName = neuroIntracranialAddonNameForAction(action);
+  if (!addonName || !isIntracranialNeuroTreatment(input)) return;
+  addRecommendation(recommendations, findItem(items, addonName), quantity, "颅内段/颅内血管治疗按对应项目追加颅内血管加收。", {
+    systemId: "neuro_intervention",
+    systemName: systemName("neuro_intervention"),
+    systemGroup: "neuro_intervention",
+    actionName: `${action.name}-颅内血管加收`,
+    clinicalTerm: input,
+    actualAction: `${action.actualAction}（颅内血管加收）`,
+    reviews: ["颅内加收必须按项目类型区分：支架使用支架颅内加收，球囊使用球囊颅内加收，慢性闭塞逆向再通使用对应颅内加收。"],
+    recordAdvice: ["手术记录写明治疗血管是否为颅内段及实际血管数量。"],
+  });
 }
 
 function isAneurysmEmbolizationBundle(text: string) {
@@ -1741,7 +1855,8 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
       if (item.sourceFile === "manualBillingRules") {
         addMissingOfficialActionWarning(globalWarnings, action.targetItemName, action.name);
       }
-      addRecommendation(recommendations, item, quantityForAction(action, segment.raw, text), action.reason, {
+      const quantity = quantityForAction(action, segment.raw, text);
+      addRecommendation(recommendations, item, quantity, action.reason, {
         systemId: segment.systemId,
         systemName: systemName(segment.systemId),
         systemGroup: segment.systemId,
@@ -1760,21 +1875,22 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
           ...(action.targetItemName.includes("脑血管造影费") ? ["skip_quantity_note"] : []),
         ]),
       });
+      addNeuroIntracranialAddonIfNeeded(action, effectiveItems, recommendations, text, quantity);
     }
   }
 
   if (therapeuticSystems.has("neuro_intervention")) {
-    if (!hasTargetVesselAngiographyDecision(text)) {
-      choicePrompts.push(targetVesselAngiographyPrompt(text));
-    } else if (hasFullEightVesselAngiographyDecision(text)) {
-      addNeuroAngiographySurcharge(effectiveItems, recommendations, text, "非靶血管造影按8根血管处理：基础脑血管造影费 + 超过3根血管加收×5。");
+    if (!hasNeuroAngioVesselDecision(text)) {
+      choicePrompts.push(neuroAngiographyVesselCountPrompt(text));
+    } else {
+      addNeuroAngiographySurchargeByDecision(effectiveItems, recommendations, text, "按已确认的脑血管造影血管数量计算超过3根加收。");
     }
   } else if (
     explicitAngioSystems.has("neuro_intervention") &&
     !therapeuticSystems.has("neuro_intervention") &&
     segments.some((segment) => segment.systemId === "neuro_intervention" && segment.actions.some((action) => action.id === "neuro-angio"))
   ) {
-    addNeuroAngiographySurcharge(effectiveItems, recommendations, text, "单纯脑血管造影按8根血管处理：基础脑血管造影费 + 超过3根血管加收×5。");
+    addNeuroAngiographySurchargeByDecision(effectiveItems, recommendations, text, "单纯脑血管造影默认按全脑8根显示；如非8根，请填写实际造影血管数量。");
   }
 
   if (ambiguousSegments.length) {

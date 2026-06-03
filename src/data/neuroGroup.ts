@@ -48,6 +48,24 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     images: [],
   },
   {
+    id: "brain-avm-embolization",
+    category: "外周血管",
+    subCategory: "神经组",
+    procedureName: "脑血管畸形栓塞",
+    keywords: ["脑血管畸形栓塞", "颅内动脉畸形栓塞", "脑动静脉畸形", "AVM", "AVM栓塞", "血管畸形栓塞"],
+    chargeItems: ["脑血管造影费", "脑血管栓塞费（介入）", "脑血管栓塞费（介入）-脑血管畸形栓塞（加收）"],
+    questions: ["请确认本次栓塞涉及几根血管。"],
+    chargeExplanation: ["脑血管畸形栓塞按脑血管栓塞费（介入）+脑血管畸形栓塞加收提示；不要与脑动静脉瘘混淆。"],
+    nursingPoints: [],
+    fluids: [],
+    consumables: [],
+    medications: [],
+    anesthesia: undefined,
+    specialNotes: ["只有明确为脑血管畸形栓塞/颅内动脉畸形栓塞/AVM 栓塞时，才提示脑血管畸形栓塞加收。"],
+    priorityWarning: undefined,
+    images: [],
+  },
+  {
     id: "spinal-artery-embolization",
     category: "外周血管",
     subCategory: "神经组",
@@ -131,14 +149,14 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     procedureName: "颈动脉支架相关规则",
     keywords: ["颈动脉支架", "颈内动脉支架", "颈外段支架", "颅内段支架", "锁骨下动脉支架", "颈动脉狭窄", "脑保护伞", "保护伞下支架"],
     chargeItems: ["脑血管造影费"],
-    questions: ["请确认支架位置：颅内段、颅外段，还是颈动脉以下。"],
-    chargeExplanation: ["颅外段按颈动脉支架置入术确认；颅内段按脑血管支架置入费确认；颈动脉以下按动脉支架置入术/经皮动脉支架置入术确认。涉及脑血管时仍需加入脑血管造影费。"],
+    questions: ["请确认支架位置：颅内段或颅外段。", "请确认治疗血管数量。"],
+    chargeExplanation: ["颈动脉颅内段和颅外段支架主项目均按脑血管支架置入费（介入）提示；颅内段追加脑血管支架置入费（介入）-颅内血管（加收），颅外段不追加颅内加收。"],
     nursingPoints: [],
     fluids: [],
     consumables: [],
     medications: [],
     anesthesia: undefined,
-    specialNotes: ["经皮穿刺脑血管腔内球囊成形术 + 锁骨下动脉支架植入术时，文档提示手术费为脑血管支架置入费 + 经皮动脉支架置入术，需按本院最终口径确认。"],
+    specialNotes: ["锁骨下动脉支架不按脑血管支架置入费提示，治疗费使用经皮动脉支架置入术并需人工确认官方目录。"],
     priorityWarning: undefined,
     images: [],
   },
@@ -167,8 +185,8 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     procedureName: "脑保护伞下颈动脉支架置入术",
     keywords: ["脑保护伞", "保护伞", "保护伞下颈动脉支架", "颈动脉保护伞", "颈动脉支架"],
     chargeItems: ["脑血管造影费", "颈动脉支架置入相关收费项目"],
-    questions: ["请确认支架位置：颅内段按脑血管支架置入费，颅外段按颈动脉支架置入术。"],
-    chargeExplanation: ["保护伞属于术式配合信息；收费仍需按支架位置映射到最新官方收费项目。"],
+    questions: ["请确认支架位置：颅内段或颅外段。", "请确认治疗血管数量。"],
+    chargeExplanation: ["保护伞属于术式配合信息；颅内段和颅外段支架主项目均按脑血管支架置入费（介入）提示，颅内段另加颅内血管加收。"],
     nursingPoints: [],
     fluids: [],
     consumables: ["注射器 5 个", "三通 3 个", "泥鳅", "纱布 2 包", "6F 腿鞘", "刀片", "蚊钳"],
@@ -270,6 +288,9 @@ export function findNeuroGroupProcedure(input: string) {
   }
   if (/脑保护伞|保护伞/.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "carotid-stent-protection");
+  }
+  if (/脑血管畸形栓塞|颅内动脉畸形栓塞|脑动静脉畸形|AVM|avm|血管畸形栓塞/.test(input)) {
+    return neuroGroupProcedures.find((procedure) => procedure.id === "brain-avm-embolization");
   }
   if (/颈动脉支架|颈内动脉支架|颈外段支架|颅内段支架|锁骨下动脉支架|颈动脉狭窄/.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "carotid-stent-rule");
