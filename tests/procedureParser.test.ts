@@ -132,6 +132,40 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = result("冠脉支架+治疗血管3支");
+  const stent = output.recommendations.find((rec) => rec.item.newName.includes("冠状动脉支架置入费"));
+  includesName(output.recommendations.map((rec) => rec.item.newName), "冠状动脉造影费");
+  assert.equal(stent?.quantity, 3, "冠脉支架应支持手动填写治疗血管数量×3");
+}
+
+{
+  const output = result("左主干+前降支支架");
+  const stent = output.recommendations.find((rec) => rec.item.newName.includes("冠状动脉支架置入费"));
+  assert.equal(stent?.quantity, 1, "左主干与前降支连续病变默认合并为一个主要治疗血管");
+}
+
+{
+  const output = result("中间支支架");
+  const stent = output.recommendations.find((rec) => rec.item.newName.includes("冠状动脉支架置入费"));
+  assert.equal(stent?.quantity, 1, "中间支不作为独立计费血管，默认归并后按1支提示");
+  assert.ok(output.globalWarnings.some((warning) => warning.includes("中间支") && warning.includes("不单独")), "中间支应提示通常不单独作为独立计费血管");
+}
+
+{
+  const output = result("桥血管造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "冠状动脉造影费");
+  includesName(outputNames, "冠状动脉造影费-桥血管造影");
+}
+
+{
+  const output = result("冠脉造影+左室造影");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "冠状动脉造影费");
+  includesName(outputNames, "冠状动脉造影费-左心室造影");
+}
+
+{
   const output = result("脑血管支架");
   const outputNames = output.recommendations.map((rec) => rec.item.newName);
   includesName(outputNames, "脑血管造影费");
@@ -525,6 +559,39 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = result("永久起搏器植入+临时起搏器术毕拔除");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "永久起搏器安装费");
+  includesName(outputNames, "临时起搏器取出费");
+}
+
+{
+  const output = result("IABP安置");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "主动脉内球囊反搏安装费");
+  assert.ok(!outputNames.some((name) => name.includes("冠状动脉支架置入费")), "单独IABP安置不能误带冠脉支架费");
+  assert.ok(!outputNames.some((name) => name.includes("主动脉内球囊反搏取出费")), "未明确取出时不自动加入IABP取出费");
+}
+
+{
+  const output = result("IABP安置+导管室取出");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "主动脉内球囊反搏安装费");
+  includesName(outputNames, "主动脉内球囊反搏取出费");
+}
+
+{
+  const output = result("CTO");
+  assert.ok(!output.recommendations.some((rec) => rec.item.newName.includes("冠状动脉慢性完全闭塞血管逆向再通治疗费")), "单纯CTO不能默认加入逆向再通费");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "coronary_cto_reverse"), "单纯CTO应追问是否采用逆向血流再通技术");
+}
+
+{
+  const output = result("CTO逆向");
+  includesName(output.recommendations.map((rec) => rec.item.newName), "冠状动脉慢性完全闭塞血管逆向再通治疗费");
+}
+
+{
   const output = result("单腔起搏器");
   const outputNames = output.recommendations.map((rec) => rec.item.newName);
   includesName(outputNames, "永久起搏器安装费");
@@ -582,6 +649,12 @@ function includesName(list: string[], expected: string) {
 }
 
 {
+  const output = result("结构性心脏病复杂封堵");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "结构性心脏病封堵费（复杂）");
+}
+
+{
   const output = names("PFO封堵+右心导管");
   includesName(output, "结构性心脏病封堵费");
   includesName(output, "右心导管检查费");
@@ -591,6 +664,45 @@ function includesName(list: string[], expected: string) {
   const output = names("房缺封堵+右心导管");
   includesName(output, "结构性心脏病封堵费");
   includesName(output, "右心导管检查费");
+}
+
+for (const input of ["TEER", "经导管二尖瓣修复术", "二尖瓣夹", "二尖瓣夹闭术", "MitraClip"]) {
+  const output = result(input);
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "选择性静脉造影术");
+  includesName(outputNames, "右心导管检查费");
+  includesName(outputNames, "二尖瓣成形费（介入）-缘对缘修复");
+  assert.ok(output.parsedFacts.some((fact) => fact.includes("TEER") || fact.includes("二尖瓣")), `${input} 应识别为TEER/二尖瓣夹闭术`);
+}
+
+{
+  const output = result("TAVR");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "选择性动脉造影费");
+  includesName(outputNames, "主动脉瓣置换费（介入）");
+}
+
+{
+  const output = result("TAVR+冠脉支架+临起");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "主动脉瓣置换费（介入）");
+  includesName(outputNames, "冠状动脉造影费");
+  includesName(outputNames, "冠状动脉支架置入费");
+  includesName(outputNames, "临时起搏器安装费");
+}
+
+{
+  const output = result("肾动脉去神经");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "选择性动脉造影费");
+  includesName(outputNames, "肾动脉去神经费");
+}
+
+{
+  const output = result("肾上腺静脉采血");
+  const outputNames = output.recommendations.map((rec) => rec.item.newName);
+  includesName(outputNames, "选择性静脉造影术");
+  includesName(outputNames, "肾上腺静脉采血");
 }
 
 {
@@ -750,6 +862,24 @@ for (const input of ["阵发性室上性心动过速", "室上速", "预激综�
   includesName(outputNames, "心腔三维标测费");
   includesName(outputNames, "房间隔分流费");
   assert.ok(!output.choicePrompts?.some((prompt) => prompt.type === "transseptal_puncture"), "已选择是后不应重复追问房间隔分流术");
+}
+
+{
+  const output = result("电复律");
+  includesName(output.recommendations.map((rec) => rec.item.newName), "心脏电除颤/电复律费");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "cardioversion_count"), "电复律应询问本次共进行了几次");
+}
+
+{
+  const output = result("电除颤3次");
+  const shock = output.recommendations.find((rec) => rec.item.newName.includes("心脏电除颤/电复律费"));
+  assert.equal(shock?.quantity, 3, "电除颤填写3次时应显示×3");
+}
+
+{
+  const output = result("二次冠脉造影");
+  assert.ok(output.choicePrompts?.some((prompt) => prompt.type === "repeat_coronary_angiography"), "二次冠脉造影应先询问是否合并治疗操作");
+  assert.ok(output.globalWarnings.some((warning) => warning.includes("二次造影") || warning.includes("复查造影")), "二次造影应提示院内物价口径确认");
 }
 
 {

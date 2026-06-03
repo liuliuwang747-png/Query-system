@@ -112,7 +112,10 @@ export type ChoicePrompt = {
     | "ccf_embolization_scope"
     | "target_vessel_angiography"
     | "neuro_angiography_vessel_count"
-    | "neuro_fistula_balloon";
+    | "neuro_fistula_balloon"
+    | "coronary_cto_reverse"
+    | "repeat_coronary_angiography"
+    | "cardioversion_count";
   title: string;
   description?: string;
   groups: Array<{

@@ -105,7 +105,7 @@ const systems: ProcedureSystem[] = [
   {
     id: "coronary_intervention",
     name: "冠脉介入",
-    keywords: /冠脉|冠状动脉|左主干|前降支|回旋支|右冠|RCA|LAD|LCX|PCI/i,
+    keywords: /冠脉|冠状动脉|左主干|前降支|回旋支|右冠|RCA|LAD|LCX|中间支|对角支|桥血管|CABG|左室造影|左心室造影|PCI|CAG|PTCA|CTO|IVUS|OCT|FFR|iFR|QFR|IABP|主动脉球囊反搏|球囊反搏/i,
   },
   {
     id: "pacemaker",
@@ -115,12 +115,12 @@ const systems: ProcedureSystem[] = [
   {
     id: "electrophysiology",
     name: "电生理系统",
-    keywords: /房颤|AF|房扑|室上速|SVT|室速|VT|预激|旁道|AVNRT|AVRT|房早|室早|房速|电生理|EPS|三维标测|CARTO|Carto|EnSite|Rhythmia|心腔内超声|ICE|肥厚型心肌病|肥厚梗阻|HOCM|室间隔肥厚|室间隔消融/i,
+    keywords: /房颤|AF|房扑|室上速|SVT|室速|VT|预激|旁道|AVNRT|AVRT|房早|室早|房速|电生理|EPS|三维标测|CARTO|Carto|EnSite|Rhythmia|心腔内超声|ICE|肥厚型心肌病|肥厚梗阻|HOCM|室间隔肥厚|室间隔消融|电复律|电除颤|除颤|心律转复/i,
   },
   {
     id: "structural_congenital",
     name: "结构性心脏病 / 先心病系统",
-    keywords: /先心|结构性|房缺|ASD|房间隔缺损|室缺|VSD|室间隔缺损|PFO|卵圆孔|左心耳|LAAO|动脉导管未闭|PDA/i,
+    keywords: /先心|结构性|房缺|ASD|房间隔缺损|室缺|VSD|室间隔缺损|PFO|卵圆孔|左心耳|LAAO|动脉导管未闭|PDA|TEER|MitraClip|二尖瓣夹|二尖瓣|主动脉瓣|TAVR/i,
   },
   {
     id: "cardiac_catheterization",
@@ -130,7 +130,7 @@ const systems: ProcedureSystem[] = [
   {
     id: "hypertension_renal",
     name: "高血压 / 肾动脉相关",
-    keywords: /高血压|肾动脉|去神经|RDN|肺动脉去神经/i,
+    keywords: /高血压|肾动脉|去神经|RDN|肺动脉去神经|AVS|肾上腺静脉采血|原醛|原发性醛固酮/i,
   },
   {
     id: "other",
@@ -185,6 +185,48 @@ function mentionedVessels(text: string) {
 function numberBeforeRoot(text: string) {
   const match = text.match(/(\d+)\s*根/);
   return match ? Number(match[1]) : 0;
+}
+
+function explicitCount(text: string, patterns: RegExp[]) {
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) return Math.max(1, Number(match[1]));
+  }
+  return null;
+}
+
+function coronaryTreatmentVesselCount(text: string, actionId: string) {
+  void actionId;
+  const explicit = explicitCount(text, [
+    /治疗血管\s*(\d+)\s*[支根]?/,
+    /治疗血管数量\s*(\d+)/,
+    /(?:支架|球囊|扩张|减容|抽吸|取栓|溶栓|再通)(?:涉及)?\s*(\d+)\s*[支根]/,
+    /(\d+)\s*[支根](?:治疗血管|支架血管|球囊血管|冠脉血管)/,
+  ]);
+  if (explicit) return explicit;
+
+  const vessels = mentionedVessels(text).filter((vessel) => vessel.id !== "RI");
+  const ids = new Set(vessels.map((vessel) => vessel.id));
+  if (!ids.size) return 1;
+
+  const explicitSeparate = /分别|不同血管|不同病变|分开计|单独计/.test(text);
+  if (!explicitSeparate && ids.has("LM") && (ids.has("LAD") || ids.has("LCX"))) {
+    const leftMainBranches = Number(ids.has("LAD")) + Number(ids.has("LCX"));
+    return Math.max(1, ids.size - leftMainBranches);
+  }
+
+  return ids.size;
+}
+
+function cardioversionCount(text: string) {
+  return explicitCount(text, [
+    /(?:电复律|电除颤|除颤|心律转复)(?:共)?\s*(\d+)\s*次/,
+    /(\d+)\s*次(?:电复律|电除颤|除颤|心律转复)/,
+  ]) || 1;
+}
+
+function hasCardioversionCountDecision(text: string) {
+  return /(?:电复律|电除颤|除颤|心律转复)(?:共)?\s*\d+\s*次|\d+\s*次(?:电复律|电除颤|除颤|心律转复)/.test(text);
 }
 
 function escapeRegExp(value: string) {
@@ -246,7 +288,11 @@ const itemNameAliases: Record<string, string[]> = {
   "囊袋清创（加收）": ["永久起搏器取出费-囊袋清创"],
   "永久起搏器安装费/ICD相关安装费": ["永久起搏器安装费"],
   经导管主动脉瓣置换相关项目: ["主动脉瓣置换费（介入）"],
-  TEER相关手术费: ["二尖瓣成形费（介入）"],
+  TEER相关手术费: ["二尖瓣成形费（介入）-缘对缘修复（扩展）", "二尖瓣成形费（介入）"],
+  二尖瓣夹闭术: ["二尖瓣成形费（介入）-缘对缘修复（扩展）", "二尖瓣成形费（介入）"],
+  经导管二尖瓣缘对缘修复术: ["二尖瓣成形费（介入）-缘对缘修复（扩展）", "二尖瓣成形费（介入）"],
+  经导管二尖瓣修复术: ["二尖瓣成形费（介入）-缘对缘修复（扩展）", "二尖瓣成形费（介入）"],
+  经导管二尖瓣夹合术: ["二尖瓣成形费（介入）-缘对缘修复（扩展）", "二尖瓣成形费（介入）"],
   脑循环造影费: ["脑血管造影费"],
 };
 
@@ -364,12 +410,18 @@ function canApplyLatestRule(input: string, rule: LatestComboRule) {
   const explicitSystems = systems.filter((system) => system.keywords.test(input)).map((system) => system.id);
   if (explicitSystems.length && !explicitSystems.includes(targetSystem)) return false;
   if (targetSystem === "coronary_intervention") {
-    return /冠脉|冠状动脉|PCI|CAG|PTCA|IVUS|OCT|FFR|iFR|QFR|CTO|IABP|ROTA|IVL|左主干|前降支|回旋支|右冠|RCA|LAD|LCX/i.test(input);
+    return /冠脉|冠状动脉|PCI|CAG|PTCA|IVUS|OCT|FFR|iFR|QFR|CTO|IABP|ROTA|IVL|左主干|前降支|回旋支|右冠|RCA|LAD|LCX|中间支|对角支|桥血管|CABG|左室造影|左心室造影/i.test(input);
   }
   if (targetSystem === "electrophysiology") {
     return Boolean(classifyElectrophysiologyAblation(input)) || /电生理|EPS|三维|ICE|CARTO|EnSite|Rhythmia/i.test(input);
   }
   return true;
+}
+
+function shouldSkipLatestRule(input: string, rule: LatestComboRule) {
+  if (/冠脉造影\+支架\+IABP|支架置入术\+IABP/.test(rule.name) && !/支架|PCI|冠脉支架|冠状动脉支架/.test(input)) return true;
+  if (/TAVR\+PCI/.test(rule.name) && !/PCI|冠脉支架|冠状动脉支架|支架/.test(input)) return true;
+  return false;
 }
 
 function ablationDiseasePrompt(): ChoicePrompt {
@@ -438,6 +490,64 @@ function selectiveArteryAngiographyPrompt(input: string): ChoicePrompt {
           { label: "是，提示选择性动脉造影", query: `${input}+选择性动脉造影`, resultHint: "选择性动脉造影费需确认目录" },
           { label: "否，不加入", query: `${input}+未行选择性动脉造影`, resultHint: "保留当前射频消融组合" },
           { label: "不确定，人工确认", query: `${input}+选择性动脉造影待确认`, resultHint: "保留当前组合并提示人工确认" },
+        ],
+      },
+    ],
+  };
+}
+
+function coronaryCtoReversePrompt(input: string): ChoicePrompt {
+  return {
+    id: "coronary-cto-reverse",
+    type: "coronary_cto_reverse",
+    title: "是否采用逆向血流再通技术？",
+    description: "只有 CTO 手术中实际采用逆向血流再通技术时，才追加冠状动脉慢性完全闭塞血管逆向再通治疗费。",
+    groups: [
+      {
+        title: "CTO逆向确认",
+        options: [
+          { label: "是，追加逆向再通费", query: `${input}+逆向血流再通`, resultHint: "冠状动脉慢性完全闭塞血管逆向再通治疗费" },
+          { label: "否，不追加", query: `${input}+未采用逆向`, resultHint: "不加入CTO逆向再通费" },
+        ],
+      },
+    ],
+  };
+}
+
+function repeatCoronaryAngiographyPrompt(input: string): ChoicePrompt {
+  return {
+    id: "repeat-coronary-angiography",
+    type: "repeat_coronary_angiography",
+    title: "本次二次造影是否合并治疗操作？",
+    description: "只做复查造影需按院内物价口径处理；合并治疗时按实际治疗项目收费。",
+    groups: [
+      {
+        title: "二次造影场景",
+        options: [
+          { label: "只做复查造影", query: `${input}+只做复查造影`, resultHint: "人工确认物价口径" },
+          { label: "合并球囊扩张", query: `${input}+冠脉球囊`, resultHint: "加入冠状动脉球囊扩张费" },
+          { label: "合并支架植入", query: `${input}+冠脉支架`, resultHint: "加入冠状动脉支架置入费" },
+          { label: "合并IVUS/OCT/FFR", query: `${input}+IVUS+FFR`, resultHint: "加入辅助检查项目" },
+          { label: "合并血栓抽吸/旋磨/IVL", query: `${input}+冠脉取栓`, resultHint: "加入冠状动脉腔内减容费" },
+        ],
+      },
+    ],
+  };
+}
+
+function cardioversionCountPrompt(input: string): ChoicePrompt {
+  return {
+    id: "cardioversion-count",
+    type: "cardioversion_count",
+    title: "本次电复律 / 电除颤共进行了几次？",
+    description: "当前版本先按次数叠加；如后续物价部门明确多次只能收一次，再另行调整。",
+    groups: [
+      {
+        title: "次数",
+        options: [
+          { label: "1次", query: `${input}+电复律1次`, resultHint: "×1" },
+          { label: "2次", query: `${input}+电复律2次`, resultHint: "×2" },
+          { label: "3次", query: `${input}+电复律3次`, resultHint: "×3" },
         ],
       },
     ],
@@ -665,10 +775,31 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
     actionName: "冠状动脉慢性完全闭塞血管逆向再通",
     actualAction: "冠状动脉慢性完全闭塞血管逆向再通",
     billingItemName: "冠状动脉慢性完全闭塞血管逆向再通治疗费",
-    expressions: ["CTO", "慢闭", "慢性闭塞", "逆向开通", "逆向再通", "逆向导丝"],
+    expressions: ["CTO逆向", "CTO逆向开通", "CTO逆向再通", "慢性完全闭塞血管逆向再通", "逆向开通", "逆向再通", "逆向导丝", "逆向血流再通"],
     isTherapeutic: true,
     reason: "临床说法指向冠状动脉 CTO 逆向再通动作。",
     recordAdvice: ["写明 CTO、逆向路径、目标血管和再通结果。"],
+  },
+  {
+    systemId: "coronary_intervention",
+    actionId: "coronary-iabp-install",
+    actionName: "IABP安置",
+    actualAction: "主动脉内球囊反搏安装",
+    billingItemName: "主动脉内球囊反搏安装费",
+    expressions: ["IABP", "IABP安置", "IABP安装", "主动脉球囊反搏", "球囊反搏", "主动脉内球囊反搏"],
+    reason: "临床说法指向主动脉内球囊反搏安装。",
+    reviews: () => ["IABP取出费按实际拔除操作收取；带回病房时不在本次流程预收取出费。"],
+    recordAdvice: ["写明IABP安置时间、路径、运行情况及是否本次流程取出。"],
+  },
+  {
+    systemId: "coronary_intervention",
+    actionId: "coronary-iabp-remove",
+    actionName: "IABP取出",
+    actualAction: "主动脉内球囊反搏取出",
+    billingItemName: "主动脉内球囊反搏取出费",
+    expressions: ["IABP取出", "IABP拔除", "IABP撤除", "球囊反搏取出", "球囊反搏拔除", "导管室取出"],
+    reason: "输入明确IABP在导管室或本次流程中取出，按实际取出操作提示。",
+    recordAdvice: ["写明IABP实际取出时间和取出过程。"],
   },
   {
     systemId: "electrophysiology",
@@ -728,6 +859,16 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
     billingItemName: "心腔内超声心动图检查费",
     expressions: ["ICE", "心腔内超声"],
     reason: "临床说法指向心腔内超声心动图检查。",
+  },
+  {
+    systemId: "electrophysiology",
+    actionId: "ep-cardioversion-defib",
+    actionName: "电复律 / 电除颤",
+    actualAction: "心脏电除颤 / 电复律",
+    billingItemName: "心脏电除颤/电复律费",
+    expressions: ["电复律", "同步电复律", "电除颤", "除颤", "室颤除颤", "心律转复"],
+    reason: "临床说法指向心脏电除颤/电复律，当前版本按实际次数叠加提示。",
+    recordAdvice: ["写明电复律/电除颤次数、能量和转复结果。"],
   },
   {
     systemId: "pacemaker",
@@ -854,6 +995,28 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
   },
   {
     systemId: "structural_congenital",
+    actionId: "structural-teer",
+    actionName: "经导管二尖瓣缘对缘修复术（TEER）",
+    actualAction: "经导管二尖瓣缘对缘修复 / 二尖瓣夹闭",
+    billingItemName: "二尖瓣成形费（介入）-缘对缘修复（扩展）",
+    expressions: ["TEER", "MitraClip", "经导管二尖瓣缘对缘修复", "经导管二尖瓣缘对缘修复术", "经导管二尖瓣修复术", "经导管二尖瓣夹合术", "二尖瓣夹闭术", "二尖瓣夹手术", "二尖瓣缘对缘修复", "二尖瓣介入修复", "二尖瓣反流介入修复", "二尖瓣返流介入修复", "二尖瓣夹", "二尖瓣钳夹"],
+    isTherapeutic: true,
+    reason: "临床说法指向TEER/二尖瓣夹闭术，按Excel官方二尖瓣介入缘对缘修复相关项目匹配。",
+    recordAdvice: ["写明TEER/二尖瓣夹闭术、右心导管和造影实际操作。"],
+  },
+  {
+    systemId: "structural_congenital",
+    actionId: "structural-tavr",
+    actionName: "经导管主动脉瓣置换术（TAVR）",
+    actualAction: "经导管主动脉瓣置换",
+    billingItemName: "主动脉瓣置换费（介入）",
+    expressions: ["TAVR", "经导管主动脉瓣置换", "主动脉瓣置换", "主动脉瓣介入", "主动脉瓣膜置换"],
+    isTherapeutic: true,
+    reason: "临床说法指向TAVR/经导管主动脉瓣置换术。",
+    recordAdvice: ["写明主动脉瓣介入置换及是否同期PCI、临时起搏器或IABP。"],
+  },
+  {
+    systemId: "structural_congenital",
     actionId: "structural-generic-closure",
     actionName: "结构性心脏病封堵",
     actualAction: "封堵",
@@ -904,6 +1067,16 @@ export const procedureAliasDictionary: ProcedureAlias[] = [
     reason: "临床说法指向肾动脉去神经治疗。",
     reviews: () => ["高血压/肾动脉相关项目当前规则需人工确认或后续补充。"],
   },
+  {
+    systemId: "hypertension_renal",
+    actionId: "adrenal-vein-sampling",
+    actionName: "肾上腺静脉采血",
+    actualAction: "肾上腺静脉采血",
+    billingItemName: "肾上腺静脉采血相关项目",
+    expressions: ["AVS", "肾上腺静脉采血", "原醛", "原发性醛固酮增多症"],
+    reason: "临床说法指向肾上腺静脉采血，当前官方库若无精确项目需人工确认。",
+    recordAdvice: ["写明肾上腺静脉采血部位、选择性静脉造影和采样过程。"],
+  },
 ];
 
 function createActionDictionary(_items: BillingItem[]): ProcedureAction[] {
@@ -930,8 +1103,11 @@ function matchingActions(segment: string, systemId: SystemId, dictionary: Proced
     if (action.id === "neuro-angio" && /脊髓血管|脊髓造影/.test(segment)) return false;
     if (action.id === "neuro-embolization" && /动脉瘤|弹簧圈|瘤腔/.test(segment)) return false;
     if (action.id === "structural-generic-closure" && /房缺|ASD|房间隔|室缺|VSD|室间隔|PFO|卵圆孔|PDA|动脉导管|左心耳|LAAO/i.test(segment)) return false;
+    if (action.id === "structural-generic-closure" && /TEER|MitraClip|二尖瓣|TAVR|主动脉瓣/i.test(segment)) return false;
     if (action.id === "pacemaker-permanent-install" && /临时|临起/.test(segment)) return false;
     if (action.id === "pacemaker-temp-install" && /取出|拔除|拔出|拔临起|拔起搏线/.test(segment)) return false;
+    if (action.id === "coronary-iabp-install" && /取出|拔除|拔出|撤除/.test(segment)) return false;
+    if (action.id === "coronary-iabp-remove" && !/取出|拔除|拔出|撤除/.test(segment)) return false;
     return true;
   });
 }
@@ -1054,6 +1230,31 @@ function manualNamedItem(name: string, unit = "需确认", price: number | null 
     isInterventional: true,
     isCommonCathLabItem: true,
   };
+}
+
+function addNamedRecommendation(
+  items: BillingItem[],
+  recommendations: Recommendation[],
+  warnings: string[],
+  parsedActions: string[],
+  name: string,
+  reason: string,
+  options: Partial<Recommendation> & { systemId: SystemId; systemName?: string; systemGroup?: SystemGroup; actionName?: string; clinicalTerm?: string; actualAction?: string; unit?: string; price?: number | null },
+) {
+  const official = findItem(items, name);
+  const item = official || manualNamedItem(name, options.unit || "需确认", options.price ?? null);
+  addRecommendation(recommendations, item, options.quantity || 1, reason, {
+    ...options,
+    systemName: options.systemName || systemName(options.systemId),
+    systemGroup: options.systemGroup || options.systemId,
+    reviews: unique([
+      ...(options.reviews || []),
+      ...(official ? [] : [`“${name}”未在官方 Excel 项目库中精确匹配，需人工确认或补充收费目录。`]),
+    ]),
+    tags: unique([...(options.tags || []), ...(official ? [] : ["需人工确认"])]),
+  });
+  if (!official) warnings.push(`“${name}”需人工确认或补充官方项目库。`);
+  parsedActions.push(`${systemName(options.systemId)}：${options.actionName || options.actualAction || name} → ${item.newName}`);
 }
 
 function neuroAngiographySurchargeItem(items: BillingItem[]): BillingItem {
@@ -1435,7 +1636,9 @@ function applyLatestStandardCombos(
   parsedActions: string[],
 ) {
   const matchedRules = latestFeeStandard.heartInterventionCombos.filter((rule) =>
-    canApplyLatestRule(input, rule) && ((rule.triggers || []).some((trigger) => triggerMatches(input, trigger)) || triggerMatches(input, rule.name)),
+    !shouldSkipLatestRule(input, rule) &&
+    canApplyLatestRule(input, rule) &&
+    ((rule.triggers || []).some((trigger) => triggerMatches(input, trigger)) || triggerMatches(input, rule.name)),
   );
   if (!matchedRules.length) return [] as SystemId[];
 
@@ -1551,8 +1754,10 @@ function applyTempPacemakerRules(items: BillingItem[], recommendations: Recommen
 
 function quantityForAction(action: ProcedureAction, segment: string, fullText: string) {
   if (action.systemId === "coronary_intervention" && ["coronary-stent", "coronary-balloon", "coronary-debulking", "coronary-thrombolysis", "coronary-cto"].includes(action.id)) {
-    const vessels = mentionedVessels(`${segment} ${fullText}`).filter((vessel) => vessel.id !== "RI");
-    return Math.max(1, vessels.length || 0);
+    return coronaryTreatmentVesselCount(`${segment} ${fullText}`, action.id);
+  }
+  if (action.id === "ep-cardioversion-defib") {
+    return cardioversionCount(`${segment} ${fullText}`);
   }
   if (action.systemId === "neuro_intervention" && [
     "neuro-stent",
@@ -1683,6 +1888,98 @@ function addRoutineAblationBundle(items: BillingItem[], recommendations: Recomme
   }
 }
 
+function applyCardiovascularSpecialCombos(
+  input: string,
+  items: BillingItem[],
+  recommendations: Recommendation[],
+  warnings: string[],
+  parsedFacts: string[],
+  parsedActions: string[],
+) {
+  const matchedSystems: SystemId[] = [];
+  const teer = /TEER|MitraClip|经导管二尖瓣缘对缘修复|经导管二尖瓣修复|经导管二尖瓣夹合|二尖瓣夹闭|二尖瓣夹手术|二尖瓣缘对缘修复|二尖瓣介入修复|二尖瓣反流介入修复|二尖瓣返流介入修复|二尖瓣夹|二尖瓣钳夹/i.test(input);
+  if (teer) {
+    matchedSystems.push("structural_congenital");
+    parsedFacts.push("识别到：经导管二尖瓣缘对缘修复术（TEER / 二尖瓣夹闭术）。");
+    const common = {
+      systemId: "structural_congenital" as SystemId,
+      systemName: systemName("structural_congenital"),
+      systemGroup: "structural_congenital" as SystemGroup,
+      clinicalTerm: input,
+      actionName: "经导管二尖瓣缘对缘修复术（TEER）",
+      reviews: ["TEER 为 Transcatheter Edge-to-Edge Repair；中文可称经导管二尖瓣缘对缘修复术，临床收费按院内二尖瓣夹闭术相关项目执行，价格以Excel官方收费表为准。"],
+    };
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "选择性静脉造影术", "TEER组合通常包含选择性静脉造影。", { ...common, actualAction: "选择性静脉造影", unit: "次" });
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "右心导管检查费", "TEER组合包含右心导管检查。", { ...common, actualAction: "右心导管检查" });
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "二尖瓣成形费（介入）-缘对缘修复（扩展）", "TEER/二尖瓣夹闭术按Excel官方二尖瓣缘对缘修复相关项目匹配。", { ...common, actualAction: "经导管二尖瓣缘对缘修复" });
+  }
+
+  const tavr = /TAVR|经导管主动脉瓣置换|主动脉瓣置换|主动脉瓣介入|主动脉瓣膜置换/i.test(input);
+  if (tavr) {
+    matchedSystems.push("structural_congenital");
+    const common = {
+      systemId: "structural_congenital" as SystemId,
+      systemName: systemName("structural_congenital"),
+      systemGroup: "structural_congenital" as SystemGroup,
+      clinicalTerm: input,
+      actionName: "经导管主动脉瓣置换术（TAVR）",
+      reviews: ["TAVR组合逻辑来自院内规则；如同期PCI、临时起搏器或IABP，按实际操作另行追加。"],
+    };
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "选择性动脉造影费", "TAVR基础组合提示选择性动脉造影。", { ...common, actualAction: "选择性动脉造影", unit: "次" });
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "主动脉瓣置换费（介入）", "TAVR按Excel官方主动脉瓣置换费（介入）匹配。", { ...common, actualAction: "经导管主动脉瓣置换" });
+  }
+
+  if (/肾动脉去神经|RDN|肾交感神经消融|顽固性高血压介入|高血压介入/i.test(input)) {
+    matchedSystems.push("hypertension_renal");
+    const common = {
+      systemId: "hypertension_renal" as SystemId,
+      systemName: systemName("hypertension_renal"),
+      systemGroup: "hypertension_renal" as SystemGroup,
+      clinicalTerm: input,
+      actionName: "肾动脉去神经",
+      reviews: ["肾动脉去神经组合按院内规则提示，价格以Excel官方项目库为准。"],
+    };
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "选择性动脉造影费", "肾动脉去神经基础组合提示相关选择性动脉造影。", { ...common, actualAction: "选择性动脉造影", unit: "次" });
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "肾动脉去神经费", "输入指向肾动脉去神经术。", { ...common, actualAction: "肾动脉去神经" });
+  }
+
+  if (/AVS|肾上腺静脉采血|原醛|原发性醛固酮增多症/i.test(input)) {
+    matchedSystems.push("hypertension_renal");
+    const common = {
+      systemId: "hypertension_renal" as SystemId,
+      systemName: systemName("hypertension_renal"),
+      systemGroup: "hypertension_renal" as SystemGroup,
+      clinicalTerm: input,
+      actionName: "肾上腺静脉采血",
+      reviews: ["当前官方项目库若无肾上腺静脉采血精确项目，需人工确认或补充收费目录。"],
+    };
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "选择性静脉造影术", "肾上腺静脉采血基础组合提示选择性静脉造影。", { ...common, actualAction: "选择性静脉造影", unit: "次" });
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "肾上腺静脉采血相关项目", "输入指向肾上腺静脉采血。", { ...common, actualAction: "肾上腺静脉采血", unit: "次" });
+  }
+
+  const firstPacemakerImplant = /起搏器植入|永久起搏器|单腔起搏器|双腔起搏器|无导线起搏器|His起搏|希氏束起搏|HIS起搏|LBB起搏|左束支起搏|三腔起搏器|CRT|CRT-D|ICD|除颤器植入|植入式除颤器/i.test(input) && !/更换|换机|换盒|脉冲发生器更换|电极调整|临时|临起/.test(input);
+  if (firstPacemakerImplant) {
+    matchedSystems.push("pacemaker");
+    const common = {
+      systemId: "pacemaker" as SystemId,
+      systemName: systemName("pacemaker"),
+      systemGroup: "pacemaker" as SystemGroup,
+      clinicalTerm: input,
+      actionName: "永久起搏器植入",
+      reviews: ["基础起搏器植入组合提示永久起搏器安装费 + 选择性静脉造影；His起搏如实际进行了电生理检查再追加电生理检查费。"],
+    };
+    addNamedRecommendation(items, recommendations, warnings, parsedActions, "选择性静脉造影术", "永久起搏器植入基础组合提示选择性静脉造影。", { ...common, actualAction: "选择性静脉造影", unit: "次" });
+    if (/His起搏|希氏束起搏|HIS起搏/i.test(input)) {
+      addNamedRecommendation(items, recommendations, warnings, parsedActions, "有创心内电生理检查费", "His起搏如实际进行了有创心内电生理检查，提示追加。", { ...common, actualAction: "有创心内电生理检查" });
+    }
+  }
+
+  if (/中间支|对角支/.test(input)) {
+    warnings.push("中间支 / 对角支通常归并到前降支或回旋支，不单独作为独立计费血管；如手术记录明确另有处理，可手动调整治疗血管数量。");
+  }
+  return unique(matchedSystems);
+}
+
 function scopedRuleWarnings(input: string, rules: ApiRule[], systemIds: SystemId[]) {
   const text = input.toLowerCase();
   const legacyScopeMap: Record<SystemId, string[]> = {
@@ -1803,7 +2100,8 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
   const roots = numberBeforeRoot(text);
 
   const latestSystems = applyLatestStandardCombos(text, effectiveItems, recommendations, globalWarnings, parsedFacts, parsedActions);
-  const allSystemIds = unique([...systemIds, ...latestSystems]);
+  const specialSystems = applyCardiovascularSpecialCombos(text, effectiveItems, recommendations, globalWarnings, parsedFacts, parsedActions);
+  const allSystemIds = unique([...systemIds, ...latestSystems, ...specialSystems]);
 
   if (allSystemIds.length === 1) {
     groupId = allSystemIds[0];
@@ -1910,6 +2208,26 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
   }
   if (ablationClass === "complex_af" && !/选择性静脉造影|静脉造影/.test(text) && !recommendations.some((rec) => rec.item.newName.includes("选择性静脉造影"))) {
     globalWarnings.push("房颤消融通常涉及选择性静脉造影术；若实际完成该操作并有记录，请确认当前收费目录中的对应项目名称后收取。");
+  }
+
+  if (/CTO|慢闭|慢性完全闭塞|冠脉闭塞/i.test(text) && !/逆向|未采用逆向/.test(text)) {
+    choicePrompts.push(coronaryCtoReversePrompt(text));
+    globalWarnings.push("CTO病变只有实际采用逆向血流再通技术时，才追加冠状动脉慢性完全闭塞血管逆向再通治疗费。");
+  }
+
+  if (/二次冠脉造影|二次PCI|住院二次造影|住院内二次冠脉造影|复查造影|再次造影/.test(text)) {
+    choicePrompts.push(repeatCoronaryAngiographyPrompt(text));
+    globalWarnings.push("二次造影/复查造影需先确认是否合并治疗；只做复查造影按院内物价口径人工确认。");
+  }
+
+  if (/电复律|电除颤|除颤|心律转复/.test(text) && !hasCardioversionCountDecision(text)) {
+    choicePrompts.push(cardioversionCountPrompt(text));
+  }
+
+  const hasIabpInstall = recommendations.some((rec) => rec.item.newName.includes("主动脉内球囊反搏安装费"));
+  const hasIabpRemove = recommendations.some((rec) => rec.item.newName.includes("主动脉内球囊反搏取出费"));
+  if (hasIabpInstall && !hasIabpRemove) {
+    globalWarnings.push("IABP取出费按实际拔除操作收取；若带回病房，取出费由后续实际拔除环节收取，不在本次流程预收。");
   }
 
   applyTempPacemakerRules(effectiveItems, recommendations, globalWarnings, text, parsedActions);
