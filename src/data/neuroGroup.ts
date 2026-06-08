@@ -147,16 +147,34 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     category: "外周血管",
     subCategory: "神经组",
     procedureName: "颈动脉支架相关规则",
-    keywords: ["颈动脉支架", "颈内动脉支架", "颈外段支架", "颅内段支架", "锁骨下动脉支架", "颈动脉狭窄", "脑保护伞", "保护伞下支架"],
+    keywords: ["颈动脉支架植入术", "颈动脉支架", "颈内动脉支架", "颈动脉狭窄支架", "颈动脉支架置入", "颈动脉支架植入", "CAS", "carotid artery stenting"],
     chargeItems: ["脑血管造影费"],
-    questions: ["请确认支架位置：颅内段或颅外段。", "请确认治疗血管数量。"],
-    chargeExplanation: ["颈动脉颅内段和颅外段支架主项目均按脑血管支架置入费（介入）提示；颅内段追加脑血管支架置入费（介入）-颅内血管（加收），颅外段不追加颅内加收。"],
+    questions: ["请先确认本次颈动脉支架植入术属于颅外段还是颅内段。", "请填写此次手术造影血管的具体数量。"],
+    chargeExplanation: ["颈动脉支架必须先区分颅外段和颅内段：颅外段按脑血管造影费 + 经皮颈动脉支架植入费；颅内段按脑血管造影费 + 脑血管支架置入费（介入）+ 颅内血管加收。"],
     nursingPoints: [],
     fluids: [],
     consumables: [],
     medications: [],
     anesthesia: undefined,
-    specialNotes: ["锁骨下动脉支架不按脑血管支架置入费提示，治疗费使用经皮动脉支架置入术并需人工确认官方目录。"],
+    specialNotes: ["颅外段颈动脉支架不得使用脑血管支架置入费替代。"],
+    priorityWarning: undefined,
+    images: [],
+  },
+  {
+    id: "carotid-balloon-rule",
+    category: "外周血管",
+    subCategory: "神经组",
+    procedureName: "颈动脉球囊扩张相关规则",
+    keywords: ["颈动脉球囊扩张", "颈动脉球扩", "颈动脉扩张", "颈内动脉球囊扩张", "颈内动脉球扩", "颈动脉狭窄球囊扩张", "颈动脉 PTA", "颈动脉PTA"],
+    chargeItems: ["脑血管造影费"],
+    questions: ["请先确认本次颈动脉球囊扩张属于颅外段还是颅内段。", "请填写此次手术造影血管的具体数量。"],
+    chargeExplanation: ["颈动脉球囊扩张必须先区分颅外段和颅内段：颅外段按脑血管造影费 + 经皮动脉内球囊扩张术；颅内段按脑血管造影费 + 脑血管球囊扩张费（介入）+ 颅内血管加收。"],
+    nursingPoints: [],
+    fluids: [],
+    consumables: [],
+    medications: [],
+    anesthesia: undefined,
+    specialNotes: ["颈动脉颅外段球囊扩张不得使用脑血管球囊扩张费替代。"],
     priorityWarning: undefined,
     images: [],
   },
@@ -184,15 +202,33 @@ export const neuroGroupProcedures: NeuroGroupProcedure[] = [
     subCategory: "神经组",
     procedureName: "脑保护伞下颈动脉支架置入术",
     keywords: ["脑保护伞", "保护伞", "保护伞下颈动脉支架", "颈动脉保护伞", "颈动脉支架"],
-    chargeItems: ["脑血管造影费", "颈动脉支架置入相关收费项目"],
-    questions: ["请确认支架位置：颅内段或颅外段。", "请确认治疗血管数量。"],
-    chargeExplanation: ["保护伞属于术式配合信息；颅内段和颅外段支架主项目均按脑血管支架置入费（介入）提示，颅内段另加颅内血管加收。"],
+    chargeItems: ["脑血管造影费"],
+    questions: ["请先确认颈动脉支架属于颅外段还是颅内段。", "请填写此次手术造影血管的具体数量。"],
+    chargeExplanation: ["保护伞属于术式配合信息；支架收费仍需先区分颅外段和颅内段。颅外段使用经皮颈动脉支架植入费，颅内段使用脑血管支架置入相关项目。"],
     nursingPoints: [],
     fluids: [],
     consumables: ["注射器 5 个", "三通 3 个", "泥鳅", "纱布 2 包", "6F 腿鞘", "刀片", "蚊钳"],
     medications: [],
     anesthesia: undefined,
     specialNotes: [],
+    priorityWarning: undefined,
+    images: [],
+  },
+  {
+    id: "subclavian-artery-stent",
+    category: "外周血管",
+    subCategory: "神经组",
+    procedureName: "锁骨下动脉支架置入术",
+    keywords: ["锁骨下动脉支架", "锁骨下支架", "锁骨下动脉狭窄支架"],
+    chargeItems: ["脑血管造影费", "经皮动脉支架置入术"],
+    questions: ["请确认治疗血管数量和官方收费目录中的标准项目名称。"],
+    chargeExplanation: ["锁骨下动脉属于颅外血管，应按脑血管造影费 + 经皮动脉支架置入术提示，不按脑血管支架置入费提示。"],
+    nursingPoints: [],
+    fluids: [],
+    consumables: [],
+    medications: [],
+    anesthesia: undefined,
+    specialNotes: ["锁骨下动脉支架不要误映射为脑血管支架置入费。"],
     priorityWarning: undefined,
     images: [],
   },
@@ -292,11 +328,17 @@ export function findNeuroGroupProcedure(input: string) {
   if (/脑血管畸形栓塞|颅内动脉畸形栓塞|脑动静脉畸形|AVM|avm|血管畸形栓塞/.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "brain-avm-embolization");
   }
-  if (/颈动脉支架|颈内动脉支架|颈外段支架|颅内段支架|锁骨下动脉支架|颈动脉狭窄/.test(input)) {
+  if (/锁骨下动脉支架|锁骨下支架|锁骨下动脉狭窄支架/.test(input)) {
+    return neuroGroupProcedures.find((procedure) => procedure.id === "subclavian-artery-stent");
+  }
+  if (/颈动脉支架|颈内动脉支架|颈动脉狭窄支架|颈动脉支架置入|颈动脉支架植入|颈动脉狭窄|颈动脉球扩\+?支架|CAS|carotid artery stenting/i.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "carotid-stent-rule");
   }
-  if (/海绵窦动静脉瘘|海绵窦瘘|颈动脉海绵窦瘘|颈内动脉海绵窦瘘|CCF|ccf|颈动脉球扩|颈内动脉球扩|颈动脉球囊扩张|颈内动脉球囊扩张/.test(input)) {
+  if (/海绵窦动静脉瘘|海绵窦瘘|颈动脉海绵窦瘘|颈内动脉海绵窦瘘|CCF|ccf/.test(input)) {
     return neuroGroupProcedures.find((procedure) => procedure.id === "ccf-embolization-carotid-balloon");
+  }
+  if (/颈动脉球囊扩张|颈动脉球扩|颈动脉扩张|颈内动脉球囊扩张|颈内动脉球扩|颈动脉狭窄球囊扩张|颈动脉\s*PTA|颈动脉PTA/.test(input)) {
+    return neuroGroupProcedures.find((procedure) => procedure.id === "carotid-balloon-rule");
   }
   const matches = neuroGroupProcedures.filter((procedure) => {
     const clinicalNames = [procedure.procedureName, ...procedure.keywords].map(compact);

@@ -19,6 +19,8 @@ export function mainComboMeta(rec: Recommendation, quantityValues?: Partial<Reco
   const suffix = unit === "小时" && typeof rec.item.price === "number" ? "/小时" : "";
   const meta = inferQuantityMeta(rec.item);
   const estimate = meta.quantityType ? calculateEstimatedAmount(rec.item, quantityValues?.[meta.quantityType]) : null;
-  const baseText = `${unit}｜${compactPriceText(rec.item.price)}${suffix}`;
-  return estimate === null ? baseText : `${baseText}｜估算 ${compactPriceText(estimate)}`;
+  const quantity = Number.isFinite(rec.quantity) ? Number(rec.quantity.toFixed(2)) : 1;
+  const subtotal = typeof rec.item.price === "number" ? rec.item.price * quantity : null;
+  const baseText = `${unit}｜单价 ${compactPriceText(rec.item.price)}${suffix}｜数量 ${quantity}｜小计 ${compactPriceText(subtotal)}`;
+  return estimate === null ? baseText : `${baseText}｜按填写估算 ${compactPriceText(estimate)}`;
 }
