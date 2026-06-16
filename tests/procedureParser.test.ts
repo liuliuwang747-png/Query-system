@@ -467,6 +467,31 @@ for (const input of ["颈动脉支架+颅外段+造影3根", "颈内动脉支架
 }
 
 {
+  const cases: Array<[string, string]> = [
+    ["局麻", "局部麻醉费（局部浸润麻醉）"],
+    ["神经阻滞", "局部麻醉费（神经阻滞麻醉）"],
+    ["无插管全麻", "全身麻醉费（无插管全麻）"],
+    ["TEE", "彩色多普勒超声检查（心脏）-彩色多普勒超声心动图检查（经食管）（扩展）"],
+    ["TCD", "多普勒检查（颅内血管）"],
+    ["PICC护理", "置管护理"],
+    ["气道支架", "气道支架置入费"],
+    ["支气管镜支架", "气道支架置入费"],
+    ["输尿管支架取出", "输尿管支架取出费"],
+    ["精索静脉栓塞", "精索静脉曲张栓塞费"],
+    ["椎体成形", "椎体成形费"],
+    ["PKP", "椎体成形费-后凸成形（扩展）"],
+    ["T管造影", "X线造影成像-T管造影（扩展）"],
+    ["引流管造影", "X线造影成像"],
+  ];
+  for (const [input, expected] of cases) {
+    const output = result(input);
+    const outputNames = output.recommendations.map((rec) => rec.item.newName);
+    includesName(outputNames, expected);
+    assert.ok(!output.globalWarnings.some((warning) => warning.includes("无法判断")), `${input} 已命中辅助项目时不应提示系统歧义`);
+  }
+}
+
+{
   const output = result("脑血管支架+颅内段+治疗血管2根");
   const stent = output.recommendations.find((rec) => rec.item.newName === "脑血管支架置入费（介入）");
   const addon = output.recommendations.find((rec) => rec.item.newName.includes("脑血管支架置入费（介入）-颅内血管"));

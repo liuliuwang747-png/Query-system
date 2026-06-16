@@ -36,6 +36,7 @@ export type BillingItem = {
   keywords: string[];
   isInterventional: boolean;
   isCommonCathLabItem: boolean;
+  requiresManualConfirm?: boolean;
   needsQuantityConfirmation?: boolean;
   quantityType?: QuantityType;
   quantityRuleText?: string;

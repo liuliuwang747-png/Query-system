@@ -4,6 +4,7 @@ import type { ChoicePrompt } from "./types";
 import { manualBillingRules } from "./associatedProcedureRules";
 import { applyProcedureAssistFeeRules } from "./procedureAssistFeeRules";
 import { findNeuroGroupProcedure, shouldUseNeuroGroupProcedure, type NeuroGroupProcedure } from "./data/neuroGroup";
+import auxiliaryCathlabItemsRaw from "./data/auxiliaryCathlabItems.generated.json";
 
 type SystemId = SystemGroup;
 
@@ -95,6 +96,8 @@ const latestFeeStandard = manualBillingRules as {
     aliases?: string[];
   }>;
 };
+
+const auxiliaryCathlabItems = auxiliaryCathlabItemsRaw as BillingItem[];
 
 const systems: ProcedureSystem[] = [
   {
@@ -309,6 +312,22 @@ export function mergeLatestStandardItems(items: BillingItem[]) {
     const existingIndex = merged.findIndex((entry) => entry.newName === item.newName || entry.newCode === item.newCode);
     if (existingIndex >= 0) merged[existingIndex] = { ...merged[existingIndex], ...item };
     else merged.push(item);
+  }
+  for (const item of auxiliaryCathlabItems) {
+    const existingIndex = merged.findIndex((entry) => (item.newCode && entry.newCode === item.newCode) || entry.newName === item.newName);
+    if (existingIndex >= 0) {
+      const base = merged[existingIndex];
+      merged[existingIndex] = {
+        ...base,
+        oldCodes: unique([...(base.oldCodes || []), ...(item.oldCodes || [])]),
+        oldNames: unique([...(base.oldNames || []), ...(item.oldNames || [])]),
+        keywords: unique([...(base.keywords || []), ...(item.keywords || [])]),
+        billingNote: unique([base.billingNote || "", item.billingNote || ""]).join(" "),
+        requiresManualConfirm: base.requiresManualConfirm || item.requiresManualConfirm,
+      };
+    } else {
+      merged.push(item);
+    }
   }
   return merged;
 }
@@ -2135,11 +2154,12 @@ function scopedRuleWarnings(input: string, rules: ApiRule[], systemIds: SystemId
 
 function fallbackSearch(input: string, items: BillingItem[], recommendations: Recommendation[], warnings: string[]) {
   const hasSystemKeyword = systems.some((system) => system.keywords.test(input));
-  if (/支架|球囊|球扩|溶栓|取栓|抽吸|吸栓|拉栓|栓塞|封堵|消融|造影|减容|旋磨|旋切/.test(input) && !hasSystemKeyword) {
-    warnings.push(clarificationForSegment(input));
-    return;
-  }
   const terms = splitProcedureInput(input);
+  const normalizedInput = normalizeSearchText(input);
+  const hitByExactAuxiliaryAlias = items.find((item) =>
+    isAuxiliaryCathlabItem(item) &&
+    [...(item.oldNames || []), ...(item.keywords || [])].some((alias) => normalizeSearchText(alias) === normalizedInput),
+  );
   const hitByName = items.find((item) => terms.some((term) => item.newName.includes(term)));
   const hitByOldMapping = items.find((item) =>
     terms.some((term) => item.oldNames?.some((name) => name.includes(term)) || item.oldCodes?.some((code) => code.includes(term)) || item.newCode.includes(term)),
@@ -2148,10 +2168,37 @@ function fallbackSearch(input: string, items: BillingItem[], recommendations: Re
   const hitByRichText = avoidRichTextFallback
     ? undefined
     : items.find((item) => terms.some((term) => item.description.includes(term) || item.billingNote.includes(term) || item.keywords?.some((key) => key.includes(term))));
-  const hit = hitByName || hitByOldMapping || hitByRichText;
+  const hitByKeywords = items.find((item) => terms.some((term) => item.keywords?.some((key) => key.includes(term))));
+  const hit = hitByExactAuxiliaryAlias || hitByName || hitByOldMapping || hitByRichText || hitByKeywords;
+  if (/支架|球囊|球扩|溶栓|取栓|抽吸|吸栓|拉栓|栓塞|封堵|消融|造影|减容|旋磨|旋切/.test(input) && !hasSystemKeyword && !isAuxiliaryCathlabItem(hit)) {
+    warnings.push(clarificationForSegment(input));
+    return;
+  }
   addRecommendation(recommendations, hit, 1, "未命中明确组合规则，按名称和关键词做最接近匹配。", {
-    reviews: ["建议人工复核，避免特殊术式按名称机械匹配。"],
+    reviews: unique([
+      "建议人工复核，避免特殊术式按名称机械匹配。",
+      ...(hit?.requiresManualConfirm ? ["该辅助项目不默认加入手术收费组合，需根据实际发生及院内口径确认。"] : []),
+    ]),
+    tags: hit?.requiresManualConfirm ? ["需确认"] : [],
   });
+}
+
+function isAuxiliaryCathlabItem(item: BillingItem | undefined) {
+  return Boolean(item?.sourceFile.includes("印刷版.xlsx") || /术中辅助处置|护理处置|其他介入/.test(item?.systemCategory || ""));
+}
+
+function findExactAuxiliaryItem(input: string, items: BillingItem[]) {
+  const normalizedInput = normalizeSearchText(input);
+  if (!normalizedInput) return undefined;
+  const candidates = items.filter((item) => {
+    if (!isAuxiliaryCathlabItem(item)) return false;
+    const normalizedOfficialName = normalizeSearchText(item.newName);
+    return (
+      (normalizedInput.length >= 3 && normalizedOfficialName.includes(normalizedInput)) ||
+      [item.newName, item.parentItem, ...(item.oldNames || []), ...(item.keywords || [])].some((alias) => normalizeSearchText(alias) === normalizedInput)
+    );
+  });
+  return candidates.find((item) => normalizeSearchText(item.newName).includes(normalizedInput)) || candidates[0];
 }
 
 export function analyzeProcedure(input: string, items: BillingItem[], rules: ApiRule[]) {
@@ -2164,6 +2211,50 @@ export function analyzeProcedure(input: string, items: BillingItem[], rules: Api
   let groupId = "home";
   let groupName = "综合判断";
   let unsupportedMessage = "";
+
+  const directAuxiliaryItem = findExactAuxiliaryItem(text, effectiveItems);
+  if (directAuxiliaryItem) {
+    addRecommendation(recommendations, directAuxiliaryItem, 1, "按辅助类项目官方名称/别名精确命中。", {
+      systemId: "other",
+      systemName: directAuxiliaryItem.systemCategory,
+      systemGroup: "other",
+      clinicalTerm: text,
+      actualAction: directAuxiliaryItem.newName,
+      reviews: directAuxiliaryItem.requiresManualConfirm ? ["该辅助项目不默认加入手术收费组合，需根据实际发生及院内口径确认。"] : [],
+      tags: directAuxiliaryItem.requiresManualConfirm ? ["需确认"] : [],
+    });
+    return {
+      input,
+      groupId: "other",
+      groupName: directAuxiliaryItem.systemCategory,
+      recommendations,
+      unsupportedMessage,
+      globalWarnings,
+      parsedFacts: [`识别为辅助类收费项目：${directAuxiliaryItem.systemCategory}`],
+      parsedActions: [directAuxiliaryItem.newName],
+      choicePrompts,
+      systemGroups: [{
+        systemId: "other" as const,
+        systemName: directAuxiliaryItem.systemCategory,
+        recommendations,
+      }],
+      procedureProfile: {
+        procedureName: text,
+        systemGroup: "other" as const,
+        systemCategory: directAuxiliaryItem.systemCategory,
+        surgeryFeeItems: recommendations,
+        intraoperativeDrugs: [],
+        monitoringAndAssistItems: [],
+        monitoringAndAssistFeeItems: directAuxiliaryItem.systemCategory.includes("术中辅助处置") ? recommendations : [],
+        lowValueConsumables: [],
+        highValueConsumables: [],
+        nursingCooperationPoints: [],
+        operatorPreferences: [],
+        riskWarnings: [],
+        manualReviewItems: unique(recommendations.flatMap((rec) => rec.reviews)),
+      },
+    };
+  }
 
   const neuroGroupProcedure = findNeuroGroupProcedure(text);
   if (neuroGroupProcedure && shouldUseNeuroGroupProcedure(neuroGroupProcedure, text)) {

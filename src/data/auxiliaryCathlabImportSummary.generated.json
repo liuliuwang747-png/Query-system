@@ -1,0 +1,2045 @@
+{
+  "sourceFile": "印刷版.xlsx",
+  "generatedAt": "2026-06-16T14:50:37.533Z",
+  "addedOfficialItems": [
+    "局部麻醉费（局部浸润麻醉）",
+    "局部麻醉费（局部静脉麻醉）",
+    "局部麻醉费（神经阻滞麻醉）",
+    "局部麻醉费（神经阻滞麻醉）-超过2小时（加收）",
+    "局部麻醉费（椎管内麻醉）",
+    "局部麻醉费（椎管内麻醉）-超过2小时（加收）",
+    "全身麻醉费（无插管全麻）",
+    "全身麻醉费（插管或喉罩）",
+    "全身麻醉费（插管或喉罩）-超过2小时（加收）",
+    "全身麻醉费（支气管内麻醉）",
+    "全身麻醉费（支气管内麻醉）-超过2小时（加收）",
+    "全身麻醉费（深低温停循环麻醉）",
+    "全身麻醉费（深低温停循环麻醉）-超过2小时（加收）",
+    "麻醉监护下镇静",
+    "B型超声检查",
+    "B型超声检查-床旁检查（加收）",
+    "B型超声检查-腔内检查（加收）",
+    "多普勒检查（周围血管）",
+    "多普勒检查（周围血管）-床旁检查（加收）",
+    "多普勒检查（颅内血管）",
+    "多普勒检查（颅内血管）-床旁检查（加收）",
+    "多普勒检查（颅内血管）-特殊方式检查（加收）",
+    "多普勒检查（颅内血管）-栓子监测（扩展）",
+    "彩色多普勒超声检查（常规）",
+    "彩色多普勒超声检查（常规）-床旁检查（加收）",
+    "彩色多普勒超声检查（常规）-腔内检查（加收）",
+    "彩色多普勒超声检查（心脏）",
+    "彩色多普勒超声检查（心脏）-床旁检查（加收）",
+    "彩色多普勒超声检查（心脏）-彩色多普勒超声心动图检查（经食管）（扩展）",
+    "彩色多普勒超声检查（血管）",
+    "彩色多普勒超声检查（血管）-床旁检查（加收）",
+    "超声造影（常规）",
+    "超声造影（血管）",
+    "置管护理（深静脉/动脉）",
+    "气管插管护理",
+    "引流管护理",
+    "引流管护理-闭式引流护理（加收）",
+    "造口/造瘘护理",
+    "经皮氧分压/二氧化碳监测费",
+    "支气管镜检查费（常规内镜）",
+    "支气管镜检查费（常规内镜）-特殊光源检查（加收）",
+    "支气管镜检查费（超声内镜）",
+    "支气管镜治疗费（常规）",
+    "支气管镜治疗费（特殊）",
+    "气道支架置入费",
+    "气道支架取出费",
+    "无创气管食管瘘修补费",
+    "无创肺减容费",
+    "无创气管异物取出费",
+    "泌尿系造瘘费",
+    "泌尿系造瘘费-上尿路（加收）",
+    "肾穿刺费",
+    "肾穿刺费-肾周脓肿引流（加收）",
+    "输尿管支架置入费",
+    "输尿管支架取出费",
+    "尿道支架置入费",
+    "尿道支架取出费",
+    "精索静脉曲张栓塞费",
+    "前列腺囊肿引流费",
+    "椎体成形费",
+    "椎体成形费-后凸成形（扩展）",
+    "肢体神经松解费",
+    "肢体血管吻合费",
+    "X线造影成像",
+    "X线造影成像-全消化道造影（加收）",
+    "X线造影成像-泪道造影（扩展）",
+    "X线造影成像-T管造影（扩展）"
+  ],
+  "addedAliases": [
+    {
+      "aliasName": "局麻",
+      "targetOfficialName": "局部麻醉费（局部浸润麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "局部浸润",
+      "targetOfficialName": "局部麻醉费（局部浸润麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "局部浸润麻醉",
+      "targetOfficialName": "局部麻醉费（局部浸润麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "神经阻滞",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "神经阻滞麻醉",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "局部神经阻滞",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "神经阻滞麻醉双穿刺点加收",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "侧隐窝阻滞术",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "侧隐窝臭氧注射",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "神经阻滞麻醉加收",
+      "targetOfficialName": "局部麻醉费（神经阻滞麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉双穿刺点加收",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉（腰麻）",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉（硬膜外阻滞）",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内置管术",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉加收",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉（腰麻硬膜外联合阻滞加收）",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "椎管内麻醉（腰麻硬膜外联合阻滞）",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "腰麻硬膜外联合神经阻滞麻醉",
+      "targetOfficialName": "局部麻醉费（椎管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "无插管全麻",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "静脉全麻",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "全身麻醉（无痛人工流产）",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "全身麻醉（无痛妇科治疗）",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "全身麻醉（无痛内窥镜全身麻醉）",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "全身麻醉（无痛胃肠镜联合检查全身麻醉）",
+      "targetOfficialName": "全身麻醉费（无插管全麻）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "插管全麻",
+      "targetOfficialName": "全身麻醉费（插管或喉罩）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "喉罩全麻",
+      "targetOfficialName": "全身麻醉费（插管或喉罩）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "喉罩麻醉",
+      "targetOfficialName": "全身麻醉费（插管或喉罩）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "气管插管全麻",
+      "targetOfficialName": "全身麻醉费（插管或喉罩）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "支气管内麻醉",
+      "targetOfficialName": "全身麻醉费（支气管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "支气管内麻醉加收",
+      "targetOfficialName": "全身麻醉费（支气管内麻醉）",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "麻醉镇静",
+      "targetOfficialName": "麻醉监护下镇静",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "镇静麻醉",
+      "targetOfficialName": "麻醉监护下镇静",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "MAC镇静",
+      "targetOfficialName": "麻醉监护下镇静",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "基础麻醉",
+      "targetOfficialName": "麻醉监护下镇静",
+      "category": "术中辅助处置",
+      "subcategory": "麻醉镇静监护"
+    },
+    {
+      "aliasName": "单脏器B超检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(胸部)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(腹部)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(胃肠道)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(泌尿系)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(妇科)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "B超常规检查(产科)",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "胸腹水B超检查及穿刺定位",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "浅表组织器官B超检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁B超检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经阴道B超检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经直肠B超检查",
+      "targetOfficialName": "B型超声检查",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁超声",
+      "targetOfficialName": "B型超声检查-床旁检查（加收）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁B超",
+      "targetOfficialName": "B型超声检查-床旁检查（加收）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁 B 超",
+      "targetOfficialName": "B型超声检查-床旁检查（加收）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "四肢多普勒血流图",
+      "targetOfficialName": "多普勒检查（周围血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "多普勒小儿血压检测",
+      "targetOfficialName": "多普勒检查（周围血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "TCD",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "颅内多普勒",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "颅内多普勒血流图",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "颅内多普勒血流图(TCD)",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经颅多普勒超声发泡试验",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经颅多普勒超声动脉压迫试验",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "颅内多普勒血流图(TCD)+栓子监测",
+      "targetOfficialName": "多普勒检查（颅内血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "栓子监测",
+      "targetOfficialName": "多普勒检查（颅内血管）-栓子监测（扩展）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "TCD栓子监测",
+      "targetOfficialName": "多普勒检查（颅内血管）-栓子监测（扩展）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查(胸部)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查(腹部)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查(胃肠道)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规(泌尿系)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查(妇科)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色多普勒超声常规检查(男性生殖系统)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "浅表器官彩色多普勒超声检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "膀胱残余尿量测定",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "超声检查实时录象",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "周围神经彩色多普勒超声常规检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "周围神经彩色多普勒超声常规检查臂丛神经加收",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁彩色多普勒超声常规检查加收",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "腔内彩色多普勒超声检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经阴道腔内彩色多普勒超声检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经直肠腔内彩色多普勒超声检查",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "脏器灰阶立体成象",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "能量图血流立体成象",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "计算机三维重建技术(3DE)",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "乳腺超声自动扫查全容积成像",
+      "targetOfficialName": "彩色多普勒超声检查（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心脏彩超",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心脏超声",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "普通心脏M型超声检查",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "普通二维超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心脏彩色多普勒超声",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "左心功能测定",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "介入治疗的超声心动图监视",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "声学定量(AQ)",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "彩色室壁动力(CK)",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "组织多普勒显象(TDI)",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心内膜自动边缘检测",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "室壁运动分析",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "超声心动图左心室收缩同步性检测",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "三维实时超声检查（心脏）",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心脏超声床旁彩超加收",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁超声心动图彩色超声仪检查",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "负荷超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "常规经食管超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "术中经食管超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "术中经食管超声心动图彩色超声仪加收",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁心脏彩超",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）-床旁检查（加收）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "床旁心脏超声",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）-床旁检查（加收）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "TEE",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）-彩色多普勒超声心动图检查（经食管）（扩展）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经食管超声",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）-彩色多普勒超声心动图检查（经食管）（扩展）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "经食管超声心动图",
+      "targetOfficialName": "彩色多普勒超声检查（心脏）-彩色多普勒超声心动图检查（经食管）（扩展）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "血管彩超",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "血管彩色多普勒",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "血管超声",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "血管彩色多普勒超声",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "左肾静脉“胡桃夹”综合征检查",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "药物血管功能试验",
+      "targetOfficialName": "彩色多普勒超声检查（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "脏器声学造影",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "胃肠充盈造影B超检查",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "大肠灌肠造影B超检查",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "输卵管超声造影",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "胃充盈及排空功能检查",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "小肠充盈及排空功能检查",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "胆囊和胆道收缩功能检查",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "肿瘤声学造影",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "右心声学造影",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "心肌灌注超声检测",
+      "targetOfficialName": "超声造影（常规）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "血管超声造影",
+      "targetOfficialName": "超声造影（血管）",
+      "category": "术中辅助处置",
+      "subcategory": "超声影像辅助"
+    },
+    {
+      "aliasName": "置管护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "深静脉置管护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "动脉置管护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "PICC护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "PICC 护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "植入式给药装置护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "动静脉置管护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "外周中心静脉导管（PICC）护理",
+      "targetOfficialName": "置管护理（深静脉/动脉）",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "气管切开护理（气管插管护理）",
+      "targetOfficialName": "气管插管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "引流管冲洗",
+      "targetOfficialName": "引流管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "引流管更换引流装置",
+      "targetOfficialName": "引流管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "引流管引流",
+      "targetOfficialName": "引流管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "引流管冲洗（更换引流装置）",
+      "targetOfficialName": "引流管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "留置导尿",
+      "targetOfficialName": "引流管护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "造瘘护理",
+      "targetOfficialName": "造口/造瘘护理",
+      "category": "护理处置",
+      "subcategory": "管路护理"
+    },
+    {
+      "aliasName": "经皮氧分压监测",
+      "targetOfficialName": "经皮氧分压/二氧化碳监测费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经皮二氧化碳监测",
+      "targetOfficialName": "经皮氧分压/二氧化碳监测费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经皮肢体氧分压测定",
+      "targetOfficialName": "经皮氧分压/二氧化碳监测费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "纤维支气管镜检查",
+      "targetOfficialName": "支气管镜检查费（常规内镜）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "电子支气管镜检查",
+      "targetOfficialName": "支气管镜检查费（常规内镜）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "硬性气管镜检查",
+      "targetOfficialName": "支气管镜检查费（常规内镜）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "超声内镜检查术",
+      "targetOfficialName": "支气管镜检查费（超声内镜）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗(痰吸引)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗(痰吸引)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗(滴药)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗(滴药)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗(止血)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗(止血)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗(化疗)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗(化疗)",
+      "targetOfficialName": "支气管镜治疗费（常规）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "特殊支气管镜治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经内镜气管扩张术",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "气管扩张",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜特殊治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜特殊治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜微波治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜微波治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜激光治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜激光治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜高频电治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜高频电治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经内镜胸部肿瘤激光治疗加收",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经内镜胸部肿瘤电凝疗加收",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经内镜胸部肿瘤特殊治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子镜胸部肿瘤特殊治疗",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经内镜胸部肿瘤局部注药疗加收",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜气管扩张术",
+      "targetOfficialName": "支气管镜治疗费（特殊）",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "气道支架",
+      "targetOfficialName": "气道支架置入费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "支气管镜支架",
+      "targetOfficialName": "气道支架置入费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜支架置入术",
+      "targetOfficialName": "气道支架置入费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜支架置入术",
+      "targetOfficialName": "气道支架置入费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜支气管胸膜瘘堵塞术",
+      "targetOfficialName": "无创气管食管瘘修补费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "支气管胸膜瘘堵塞",
+      "targetOfficialName": "无创气管食管瘘修补费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "肺减容",
+      "targetOfficialName": "无创肺减容费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "无创肺减容",
+      "targetOfficialName": "无创肺减容费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经纤支镜治疗(取异物)",
+      "targetOfficialName": "无创气管异物取出费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "经电子支气管镜治疗(取异物)",
+      "targetOfficialName": "无创气管异物取出费",
+      "category": "其他介入",
+      "subcategory": "呼吸气道介入"
+    },
+    {
+      "aliasName": "肾造瘘",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经皮肾造瘘",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "膀胱造瘘术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾实质切开造瘘术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经皮输尿管内管置入术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "膀胱穿刺造瘘术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "尿道会阴造口术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾造瘘术",
+      "targetOfficialName": "泌尿系造瘘费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾穿刺术",
+      "targetOfficialName": "肾穿刺费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾囊肿硬化治疗",
+      "targetOfficialName": "肾穿刺费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾周脓肿引流术",
+      "targetOfficialName": "肾穿刺费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾周积液引流术",
+      "targetOfficialName": "肾穿刺费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾封闭术",
+      "targetOfficialName": "肾穿刺费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "肾周脓肿引流",
+      "targetOfficialName": "肾穿刺费-肾周脓肿引流（加收）",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "输尿管支架",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "输尿管支架置入",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经膀胱镜输尿管支架置入术",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经输尿管镜支架置入术",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "输尿管支架管冲洗",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经膀胱镜输尿管插管术",
+      "targetOfficialName": "输尿管支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "输尿管支架取出",
+      "targetOfficialName": "输尿管支架取出费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经输尿管镜支架取出术",
+      "targetOfficialName": "输尿管支架取出费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经膀胱镜输尿管支架取出术",
+      "targetOfficialName": "输尿管支架取出费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "尿道支架",
+      "targetOfficialName": "尿道支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "尿道支架置入",
+      "targetOfficialName": "尿道支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "经尿道前列腺支架置入术",
+      "targetOfficialName": "尿道支架置入费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "尿道支架取出",
+      "targetOfficialName": "尿道支架取出费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "精索静脉栓塞",
+      "targetOfficialName": "精索静脉曲张栓塞费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "精索静脉曲张栓塞术",
+      "targetOfficialName": "精索静脉曲张栓塞费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "前列腺脓肿切开术",
+      "targetOfficialName": "前列腺囊肿引流费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "前列腺囊肿切除术",
+      "targetOfficialName": "前列腺囊肿引流费",
+      "category": "其他介入",
+      "subcategory": "泌尿介入"
+    },
+    {
+      "aliasName": "椎体成形",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "经皮椎体成形术",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "PVP",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "经皮椎体成形术加收",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "其他骨骼部位骨水泥注入术",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "间盘镜加收",
+      "targetOfficialName": "椎体成形费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "后凸成形",
+      "targetOfficialName": "椎体成形费-后凸成形（扩展）",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "椎体后凸成形",
+      "targetOfficialName": "椎体成形费-后凸成形（扩展）",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "PKP",
+      "targetOfficialName": "椎体成形费-后凸成形（扩展）",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "肢体神经松解",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "腕管综合症切开减压术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "肘管综合症切开减压术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "坐骨神经松解术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "周围神经嵌压松解术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "神经纤维部分切断术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "闭孔神经切断术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "闭孔神经内收肌切断术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "足伸拇短肌去神经术",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "关节镜加收",
+      "targetOfficialName": "肢体神经松解费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "小动脉吻合术",
+      "targetOfficialName": "肢体血管吻合费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "小静脉吻合术",
+      "targetOfficialName": "肢体血管吻合费",
+      "category": "其他介入",
+      "subcategory": "骨科疼痛介入"
+    },
+    {
+      "aliasName": "脊髓造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "椎间盘造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "支气管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉胆道造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉泌尿系造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "逆行泌尿系造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "肾盂穿刺造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "膀胱造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫输卵管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫输卵管碘油造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢淋巴管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "窦道及瘘管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "窦道造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "瘘管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢血管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "引流管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "泌尿系造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "气脑造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "脑室碘水造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "脊髓(椎管)造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "脊髓(椎管)造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "脊髓(椎管)造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "椎间盘造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "椎间盘造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "副鼻窦造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "颞下颌关节造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "颞下颌关节造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "颞下颌关节造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "乳腺导管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "乳腺导管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "乳腺导管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "唾液腺造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "唾液腺造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "唾液腺造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "下咽造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "食管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "食管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "食管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "上消化道造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "上消化道造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "上消化道造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "胃肠排空试验",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "胃肠排空试验使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "胃肠排空试验使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "小肠插管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法小肠造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法小肠造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法小肠造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "钡灌肠大肠造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "钡灌肠大肠造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "钡灌肠大肠造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "腹膜后充气造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "腹膜后充气造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "腹膜后充气造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法胆道造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法胆道造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "口服法胆道造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉胆道造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉胆道造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉泌尿系造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "静脉泌尿系造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "逆行泌尿系造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "逆行泌尿系造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "肾盂穿刺造影影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "肾盂穿刺造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "膀胱造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "膀胱造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "阴茎海绵体造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "输精管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫输卵管碘油造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "子宫输卵管碘油造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢淋巴管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢淋巴管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "窦道及瘘管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "窦道及瘘管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢关节造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢血管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "四肢血管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "引流管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "引流管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "泪道造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "T管造影",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "T管造影使用数字化X线机加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "T管造影使用DSA加收",
+      "targetOfficialName": "X线造影成像",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "泪道造影",
+      "targetOfficialName": "X线造影成像-泪道造影（扩展）",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "T管造影",
+      "targetOfficialName": "X线造影成像-T管造影（扩展）",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    },
+    {
+      "aliasName": "T 管造影",
+      "targetOfficialName": "X线造影成像-T管造影（扩展）",
+      "category": "其他介入",
+      "subcategory": "X线及DSA辅助造影"
+    }
+  ],
+  "skippedCardiovascularItems": 122,
+  "skippedNeurovascularItems": 30,
+  "duplicateExistingItems": 0,
+  "actualAddedItemCount": 67,
+  "actualAddedAliasCount": 326,
+  "categoryCounts": {
+    "术中辅助处置 / 麻醉镇静监护": 14,
+    "术中辅助处置 / 超声影像辅助": 19,
+    "护理处置 / 管路护理": 5,
+    "其他介入 / 呼吸气道介入": 11,
+    "其他介入 / 泌尿介入": 10,
+    "其他介入 / 骨科疼痛介入": 4,
+    "其他介入 / X线及DSA辅助造影": 4
+  }
+}
